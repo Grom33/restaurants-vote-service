@@ -6,3 +6,7 @@ cache:
     - $HOME/.m2
 services:
   - memcached
+
+script:
+  - ./mvnw clean install
+  - bash <(curl -s https://codecov.io/bash)

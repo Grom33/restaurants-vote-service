@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Grom33/restaurants-vote-service.svg?branch=master)](https://travis-ci.org/Grom33/restaurants-vote-service)
+
 # **Restaurant vote system**
     
 ### Voiting system for deciding where to have lunch
