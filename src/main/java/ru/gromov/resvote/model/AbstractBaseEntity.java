@@ -16,7 +16,7 @@ import javax.persistence.*;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public abstract class AbstractBaseEntity implements Persistable<Long> {
+public abstract class AbstractBaseEntity implements HasId {
 
 	private static final int START_SEQ = 100000;
 
@@ -29,6 +29,16 @@ public abstract class AbstractBaseEntity implements Persistable<Long> {
 	@Override
 	public boolean isNew() {
 		return getId() == null;
+	}
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override
@@ -47,9 +57,4 @@ public abstract class AbstractBaseEntity implements Persistable<Long> {
 	public int hashCode() {
 		return getId() == null ? 0 : Long.hashCode(getId());
 	}
-
-	public Long getId() {
-		return id;
-	}
-
 }

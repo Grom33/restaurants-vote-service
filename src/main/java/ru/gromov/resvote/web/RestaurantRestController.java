@@ -3,15 +3,19 @@ package ru.gromov.resvote.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
+import ru.gromov.resvote.to.RestaurantTo;
 
-import java.time.LocalDate;
 import java.util.List;
+
+import static ru.gromov.resvote.util.RestaurantUtil.*;
+import static ru.gromov.resvote.util.ValidationUtil.*;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -26,66 +30,48 @@ public class RestaurantRestController {
 	@Autowired
 	RestaurantService restaurantService;
 
-	/**
-	 * Add new restaurant entity
-	 *
-	 * @param restaurant New Restaurant Entity
-	 * @return Added restaurant entity
-	 */
+	@GetMapping(params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
+	private List<RestaurantTo> getAllRestaurants(@RequestParam("page") final int page,
+	                                             @RequestParam("size") final int size) {
+		final Page<Restaurant> result = restaurantService.getAllPaginated(page, size);
+		return createListToFromListEntity(result.getContent());
+	}
+
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
-		return restaurantService.addRestaurant(restaurant);
+	private RestaurantTo addRestaurant(@RequestBody final RestaurantTo restaurant) {
+		return createToFromEntity(restaurantService.addRestaurant(createNewFromTo(restaurant)));
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	List<Restaurant> getAllRestaurant() {
-		return restaurantService.getAll();
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	private RestaurantTo getRestaurant(@PathVariable String id) {
+		return createToFromEntity(restaurantService.getById(Long.valueOf(id)));
 	}
 
-
-	/**
-	 * @return List of Restaurants with Dishes on today
-	 */
-	@GetMapping(value = "/today", produces = MediaType.APPLICATION_JSON_VALUE)
-	List<Restaurant> getAllRestaurantsWithDishes() {
-		return restaurantService.getAllRestaurantWithDishesByDate(LocalDate.now());
+	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	private void updateRestaurant(@PathVariable final String id, @RequestBody final RestaurantTo restaurantTo) {
+		Restaurant restaurant = createNewFromTo(restaurantTo);
+		assureIdConsistent(restaurant, Long.valueOf(id));
+		restaurantService.update(restaurant);
 	}
 
-	/**
-	 * Return
-	 *
-	 * @param id Id of Restaurant Entity
-	 * @return Restaurant entity with dishes set
-	 */
-	@GetMapping(value = "/today/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	Restaurant getRestaurantWithDishes(@PathVariable String id) {
-		return restaurantService.getRestaurantWithDishesByDate(LocalDate.now(), Long.parseLong(id));
+	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	private void deleteRestaurant(@PathVariable final String id) {
+		restaurantService.delete(Long.valueOf(id));
 	}
 
-
-	@PostMapping(value = "/today")
-	@PutMapping(value = "/today")
-	@DeleteMapping(value = "/today")
-	ResponseEntity<?> badRequestToday() {
-		return methodNotAllowedResponse();
-	}
-
-	@PostMapping(value = "/today/{id}")
-	@PutMapping(value = "/today/{id}")
-	@DeleteMapping(value = "/today/{id}")
-	ResponseEntity<?> badRequestTodayId() {
-		return methodNotAllowedResponse();
-	}
-
+	@PutMapping
 	@DeleteMapping
-	ResponseEntity<?> badRequestRestaurant() {
+	private ResponseEntity<?> notAllowedRequest() {
+		return methodNotAllowedResponse();
+	}
+
+	@PostMapping(value = "/{id}")
+	private ResponseEntity<?> notAllowedRequestWithId() {
 		return methodNotAllowedResponse();
 	}
 
 	private ResponseEntity<?> methodNotAllowedResponse() {
 		return new ResponseEntity<>("METHOD_NOT_ALLOWED", HttpStatus.METHOD_NOT_ALLOWED);
 	}
-
-
 }
