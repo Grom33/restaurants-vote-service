@@ -27,5 +27,5 @@ public interface RestaurantService {
 
 	void update(Restaurant restaurant);
 
-	void delete(Long id);
+	void delete(long id);
 }

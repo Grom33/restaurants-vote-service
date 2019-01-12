@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.gromov.resvote.model.Dish;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /*
@@ -16,6 +17,6 @@ import java.util.List;
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Long> {
 
-	@Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId ORDER BY d.date DESC")
-	List<Dish> getAllByRestaurant( @Param("restaurantId") long id);
+	@Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId AND d.date=:date ORDER BY d.date DESC")
+	List<Dish> getByRestaurantId(@Param("restaurantId") long id, @Param("date") LocalDate date);
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.RestaurantTo;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static ru.gromov.resvote.util.RestaurantUtil.*;
@@ -30,11 +32,15 @@ public class RestaurantRestController {
 	@Autowired
 	RestaurantService restaurantService;
 
-	@GetMapping(params = {"page", "size"}, produces = MediaType.APPLICATION_JSON_VALUE)
-	private List<RestaurantTo> getAllRestaurants(@RequestParam("page") final int page,
-	                                             @RequestParam("size") final int size) {
-		final Page<Restaurant> result = restaurantService.getAllPaginated(page, size);
-		return createListToFromListEntity(result.getContent());
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	private List<RestaurantTo> getAllRestaurants(@RequestParam(value = "page", required = false) final Integer page,
+	                                             @RequestParam(value = "size", required = false) final Integer size) {
+		if (page == null && size == null) {
+			return createListToFromListEntity(restaurantService.getAll());
+		} else {
+			final Page<Restaurant> result = restaurantService.getAllPaginated(page, size);
+			return createListToFromListEntity(result.getContent());
+		}
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -44,20 +50,36 @@ public class RestaurantRestController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	private RestaurantTo getRestaurant(@PathVariable String id) {
+	private RestaurantTo getRestaurant(@PathVariable final String id) {
 		return createToFromEntity(restaurantService.getById(Long.valueOf(id)));
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	private void updateRestaurant(@PathVariable final String id, @RequestBody final RestaurantTo restaurantTo) {
+	private ResponseEntity<?> update(@PathVariable final String id,
+	                                 @RequestBody final RestaurantTo restaurantTo) {
 		Restaurant restaurant = createNewFromTo(restaurantTo);
 		assureIdConsistent(restaurant, Long.valueOf(id));
 		restaurantService.update(restaurant);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
+	private List<Restaurant> getRestaurantWithDishesByDate(
+			@RequestParam(value = "date", required = false)
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate date) {
+		if (date == null) {
+			log.info("Get list with dishes on today");
+			return restaurantService.getAllRestaurantWithDishesByDate(LocalDate.now());
+		} else {
+			log.info("Get list with dishes on {}", date);
+			return restaurantService.getAllRestaurantWithDishesByDate(date);
+		}
 	}
 
 	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	private void deleteRestaurant(@PathVariable final String id) {
+	private ResponseEntity<?> delete(@PathVariable final String id) {
 		restaurantService.delete(Long.valueOf(id));
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PutMapping

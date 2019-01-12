@@ -21,7 +21,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	@Query("SELECT r FROM Restaurant r WHERE r.id = ?1")
 	Restaurant getByIdwithDishes(long id);
 
-	@Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date")
+	@Query("SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date")
 	List<Restaurant> getAllRestaurantWithDishesByDate(@Param("date") LocalDate date);
 
 	@Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date and r.id=:id")

@@ -25,35 +25,40 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Autowired
 	RestaurantRepository restaurantRepository;
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAll() {
+		log.info("Get list of restaurants");
 		return restaurantRepository.findAll();
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public Page<Restaurant> getAllPaginated(final int page, final int size) {
+		log.info("Get paginated list of restaurants");
 		return restaurantRepository.findAll(PageRequest.of(page, size));
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDate(final LocalDate date) {
 		return restaurantRepository.getAllRestaurantWithDishesByDate(date);
 	}
 
+	@Transactional
 	@Override
-	public Restaurant addRestaurant(Restaurant restaurant) {
+	public Restaurant addRestaurant(final Restaurant restaurant) {
 		return restaurantRepository.save(restaurant);
 	}
 
 	@Override
-	public Restaurant getRestaurantWithDishesByDate(LocalDate date, long id) {
+	public Restaurant getRestaurantWithDishesByDate(final LocalDate date, final long id) {
 		return restaurantRepository.getRestaurantWithDishesByDate(date, id);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Restaurant getById(long id) {
+	public Restaurant getById(final long id) {
 		log.info("Get restaurant with id {}", id);
 
 		return restaurantRepository.findById(id)
@@ -63,7 +68,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Transactional
 	@Override
-	public void update(Restaurant restaurant) {
+	public void update(final Restaurant restaurant) {
 		log.info("Update restaurant entity: {}", restaurant);
 
 		Restaurant rest = getById(restaurant.getId());
@@ -71,8 +76,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurantRepository.save(rest);
 	}
 
+	@Transactional
 	@Override
-	public void delete(Long id) {
+	public void delete(final long id) {
 		log.info("Delete restaurant entity with id: {}", id);
 		restaurantRepository.deleteById(id);
 	}
