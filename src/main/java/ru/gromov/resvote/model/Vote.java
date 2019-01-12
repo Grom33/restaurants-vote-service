@@ -17,7 +17,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @Entity
 @Table(name = "vote")
 public class Vote extends AbstractBaseEntity {

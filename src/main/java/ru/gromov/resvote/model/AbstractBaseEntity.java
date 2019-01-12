@@ -4,6 +4,7 @@ package ru.gromov.resvote.model;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.domain.Persistable;
 
@@ -24,6 +25,7 @@ public abstract class AbstractBaseEntity implements Persistable<Long> {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
 	protected Long id;
 
+	@JsonIgnore
 	@Override
 	public boolean isNew() {
 		return getId() == null;

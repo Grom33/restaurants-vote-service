@@ -13,17 +13,18 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true, exclude = "dishes")
 @Entity
 @Table(name = "restaurants")
-@NamedEntityGraph(name = "graph.dishes.items", attributeNodes = @NamedAttributeNode("dishes"))
 public class Restaurant extends AbstractNamedEntity {
 
 	//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-	//@OrderBy("date DESC")
+	@OrderBy("name DESC")
 	@JsonManagedReference(value = "restaurant")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
 	private Set<Dish> dishes;
+
+
 
 }

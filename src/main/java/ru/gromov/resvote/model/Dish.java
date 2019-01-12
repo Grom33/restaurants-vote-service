@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true, exclude = "restaurant")
 @Entity
 @Table(name = "dishes")
 public class Dish extends AbstractNamedEntity {
@@ -32,7 +32,7 @@ public class Dish extends AbstractNamedEntity {
 
 	@NotNull
 	@JsonBackReference(value = "restaurant")
-	@JoinColumn(name = "restaurant_id", nullable = false)
+	@JoinColumn(name = "rest_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Restaurant restaurant;

@@ -16,10 +16,12 @@ import javax.validation.constraints.Size;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+@Setter
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
 	@NotBlank
-	@Size(min = 2, max = 100)
+	@Size(min = 1, max = 100)
 	@Column(name = "name", nullable = false)
 	@SafeHtml
 	protected String name;
