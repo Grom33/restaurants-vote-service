@@ -20,6 +20,8 @@ import java.util.Set;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends AbstractNamedEntity {
 
 	@Email

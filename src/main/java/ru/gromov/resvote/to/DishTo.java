@@ -20,9 +20,9 @@ public class DishTo {
 
 	@NotBlank
 	@Size(min = 2, max = 100)
-	String name;
+	private String name;
 
 	@Digits(integer = 10, fraction = 2)
-	BigDecimal price;
+	private BigDecimal price;
 
 }

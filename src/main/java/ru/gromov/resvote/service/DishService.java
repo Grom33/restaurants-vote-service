@@ -16,11 +16,11 @@ public interface DishService {
 
 	Dish getById(long id);
 
-	List<Dish> getByRestaurantId(Long id, LocalDate date);
+	List<Dish> getByRestaurantId(long id, LocalDate date);
 
 	void update(Dish dish);
 
-	void delete(Long id);
+	void delete(long id);
 
 	List<Dish> createAll(List<Dish> dishes);
 }

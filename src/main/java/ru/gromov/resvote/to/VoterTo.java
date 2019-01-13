@@ -12,9 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VoterTo {
-
 	private long id;
-
 	private String name;
-
 }

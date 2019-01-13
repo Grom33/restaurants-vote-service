@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
@@ -30,10 +31,11 @@ import static ru.gromov.resvote.util.ValidationUtil.*;
 public class RestaurantRestController {
 
 	@Autowired
-	RestaurantService restaurantService;
+	private final RestaurantService restaurantService;
+
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	private List<RestaurantTo> getAllRestaurants(@RequestParam(value = "page", required = false) final Integer page,
+	public List<RestaurantTo> getAllRestaurants(@RequestParam(value = "page", required = false) final Integer page,
 	                                             @RequestParam(value = "size", required = false) final Integer size) {
 		if (page == null && size == null) {
 			return createListToFromListEntity(restaurantService.getAll());
@@ -45,17 +47,17 @@ public class RestaurantRestController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	private RestaurantTo addRestaurant(@RequestBody final RestaurantTo restaurant) {
+	public RestaurantTo addRestaurant(@RequestBody final RestaurantTo restaurant) {
 		return createToFromEntity(restaurantService.addRestaurant(createNewFromTo(restaurant)));
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	private RestaurantTo getRestaurant(@PathVariable final String id) {
+	public RestaurantTo getRestaurant(@PathVariable final String id) {
 		return createToFromEntity(restaurantService.getById(Long.valueOf(id)));
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> update(@PathVariable final String id,
+	public ResponseEntity<?> update(@PathVariable final String id,
 	                                 @RequestBody final RestaurantTo restaurantTo) {
 		Restaurant restaurant = createNewFromTo(restaurantTo);
 		assureIdConsistent(restaurant, Long.valueOf(id));
@@ -64,7 +66,7 @@ public class RestaurantRestController {
 	}
 
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
-	private List<Restaurant> getRestaurantWithDishesByDate(
+	public List<Restaurant> getRestaurantWithDishesByDate(
 			@RequestParam(value = "date", required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		if (date == null) date = LocalDate.now();
@@ -72,19 +74,19 @@ public class RestaurantRestController {
 	}
 
 	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> delete(@PathVariable final String id) {
+	public ResponseEntity<?> delete(@PathVariable final String id) {
 		restaurantService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PutMapping
 	@DeleteMapping
-	private ResponseEntity<?> notAllowedRequest() {
+	public ResponseEntity<?> notAllowedRequest() {
 		return methodNotAllowedResponse();
 	}
 
 	@PostMapping(value = "/{id}")
-	private ResponseEntity<?> notAllowedRequestWithId() {
+	public ResponseEntity<?> notAllowedRequestWithId() {
 		return methodNotAllowedResponse();
 	}
 

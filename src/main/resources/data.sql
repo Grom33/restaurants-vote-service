@@ -1,11 +1,11 @@
 
 INSERT INTO users (id, name, email, password) VALUES
-(1, 'Admin',  'admin@mail.ru', ''),
-(2, 'Ivan',   'ivan@mail.ru', ''),
-(3, 'Petr',   'petr@mail.ru', ''),
-(4, 'Irina',  'irina@ya.ru', ''),
-(5, 'John',  'john@gmail.com', ''),
-(6, 'Julia',  'julia@gmail.com', '');
+(1, 'Admin',  'admin@mail.ru', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC'),
+(2, 'Ivan',   'ivan@mail.ru', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC'),
+(3, 'Petr',   'petr@mail.ru', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC'),
+(4, 'Irina',  'irina@ya.ru', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC'),
+(5, 'John',  'john@gmail.com', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC'),
+(6, 'Julia',  'julia@gmail.com', '$2a$10$OY0gT8TTxH45.LK37Wx/8OYAb2jVX9fG2pmd2b464QBJc3qJ7FyJC');
 
 INSERT INTO user_roles (role, user_id) VALUES
 ('ROLE_ADMIN',  1),

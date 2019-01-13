@@ -4,9 +4,7 @@ package ru.gromov.resvote.model;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -20,6 +18,7 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "vote")
+@NoArgsConstructor
 public class Vote extends AbstractBaseEntity {
 
 	@Column(name = "date", nullable = false)

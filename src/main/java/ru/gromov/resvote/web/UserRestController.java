@@ -25,32 +25,32 @@ import java.util.List;
 public class UserRestController {
 
 	@Autowired
-	private UserService userService;
+	private final UserService userService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	private List<User> getAllUsers() {
+	public List<User> getAllUsers() {
 		return userService.getAll();
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	private User create(@RequestBody final UserTo user) {
+	public User create(@RequestBody final UserTo user) {
 		return userService.create(UserUtil.getUserFromTo(user));
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	private User getUser(@PathVariable final String id) {
+	public User getUser(@PathVariable final String id) {
 		return userService.getById(Long.valueOf(id));
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> update(@RequestBody final UserTo user) {
+	public ResponseEntity<?> update(@RequestBody final UserTo user) {
 		userService.update(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> delete(@PathVariable final String id) {
+	public ResponseEntity<?> delete(@PathVariable final String id) {
 		userService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

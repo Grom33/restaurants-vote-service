@@ -31,13 +31,13 @@ import static ru.gromov.resvote.util.ValidationUtil.*;
 @RequiredArgsConstructor
 public class DishRestController {
 	@Autowired
-	DishService dishService;
+	private final DishService dishService;
 
 	@Autowired
-	RestaurantService restaurantService;
+	private final RestaurantService restaurantService;
 
 	@GetMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
-	private List<Dish> getByRestaurant(@PathVariable final String restaurantId,
+	public List<Dish> getByRestaurant(@PathVariable final String restaurantId,
 	                                   @RequestParam(value = "date", required = false)
 	                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		if (date == null) date = LocalDate.now();
@@ -46,7 +46,7 @@ public class DishRestController {
 
 	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	private List<Dish> addDishes(@PathVariable final String restaurantId,
+	public List<Dish> addDishes(@PathVariable final String restaurantId,
 	                             @RequestBody final List<DishTo> dishes) {
 		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
 
@@ -58,12 +58,12 @@ public class DishRestController {
 	}
 
 	@GetMapping(value = "/dishes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	private Dish get(@PathVariable final String id) {
+	public Dish get(@PathVariable final String id) {
 		return dishService.getById(Long.valueOf(id));
 	}
 
 	@PutMapping(value = "/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> update(@RequestBody final Dish dish,
+	public ResponseEntity<?> update(@RequestBody final Dish dish,
 	                                 @PathVariable final String id) {
 		assureIdConsistent(dish, Long.valueOf(id));
 		dishService.update(dish);
@@ -71,7 +71,7 @@ public class DishRestController {
 	}
 
 	@DeleteMapping(value = "/dishes/{id}")
-	private ResponseEntity<?> delete(@PathVariable final String id) {
+	public ResponseEntity<?> delete(@PathVariable final String id) {
 		dishService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

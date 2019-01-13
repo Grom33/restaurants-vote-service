@@ -16,19 +16,19 @@ import ru.gromov.resvote.util.exception.NotFoundException;
 public class RestExceptionHandler {
 
 	@ExceptionHandler({NotFoundException.class})
-	private ResponseEntity<Object> handleNotFoundException(Exception ex) {
+	public ResponseEntity<Object> handleNotFoundException(final Exception ex) {
 		return new ResponseEntity<>(
 				ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler({IllegalArgumentException.class})
-	private ResponseEntity<Object> handleIlligalArgException(Exception ex) {
+	public ResponseEntity<Object> handleIllegalArgException(final Exception ex) {
 		return new ResponseEntity<>(
 				ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler({DeadLineException.class})
-	private ResponseEntity<Object> handleDeadlineException(Exception ex) {
+	public ResponseEntity<Object> handleDeadlineException(final Exception ex) {
 		return new ResponseEntity<>(
 				ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN);
 	}

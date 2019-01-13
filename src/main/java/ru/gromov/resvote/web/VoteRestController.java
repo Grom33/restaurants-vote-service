@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 public class VoteRestController {
 
 	@Autowired
-	VoteService voteService;
+	private final VoteService voteService;
 
 	@GetMapping(value = "/{id}/vote")
-	private List<VoterTo> getListVoteOfRestaurant(@PathVariable final String id,
-	                                              @RequestParam(value = "date", required = false)
-	                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	public List<VoterTo> getListVoteOfRestaurant(@PathVariable final String id,
+	                                             @RequestParam(value = "date", required = false)
+	                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		if (date == null) date = LocalDate.now();
 		return voteService.getRestaurantVote(Long.valueOf(id), date).stream()
 				.map(v -> new VoterTo(v.getUser().getId(), v.getUser().getName()))
@@ -39,20 +39,20 @@ public class VoteRestController {
 	}
 
 	@DeleteMapping(value = "/vote")
-	private ResponseEntity<?> delete() {
+	public ResponseEntity<?> delete() {
 		voteService.deleteCurrentVoteOfUser(1L);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping(value = "/{id}/vote")
-	private ResponseEntity<?> makeVote(@PathVariable final String id) {
+	public ResponseEntity<?> makeVote(@PathVariable final String id) {
 		voteService.makeVote(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/vote")
-	private List<RestaurantWithVoteTo> getListVotedRestaurants(@RequestParam(value = "date", required = false)
-	                                                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	public List<RestaurantWithVoteTo> getListVotedRestaurants(@RequestParam(value = "date", required = false)
+	                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		if (date == null) date = LocalDate.now();
 		return voteService.getVotedRestaurants(date);
 	}

@@ -26,6 +26,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
 	@Query("SELECT new ru.gromov.resvote.to.RestaurantWithVoteTo(r.id, r.name, COUNT(v.id)) " +
 			"FROM Vote v JOIN FETCH ru.gromov.resvote.model.Restaurant r ON r.id = v.restaurantId " +
-			"WHERE v.date =:date GROUP BY r.id ORDER BY count(v.id) DESC" )
+			"WHERE v.date =:date GROUP BY r.id ORDER BY count(v.id) DESC")
 	List<RestaurantWithVoteTo> getVotedRestaurants(@Param("date") LocalDate date);
 }
