@@ -1,6 +1,5 @@
 package ru.gromov.resvote.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.gromov.resvote.model.User;
 
 import java.util.List;
@@ -20,4 +19,8 @@ public interface UserService {
 	void update(User user);
 
 	void delete(long id);
+
+	User getLoggedUser();
+
+	void updateLoggedUser(User user);
 }

@@ -8,7 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
@@ -36,7 +35,7 @@ public class RestaurantRestController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<RestaurantTo> getAllRestaurants(@RequestParam(value = "page", required = false) final Integer page,
-	                                             @RequestParam(value = "size", required = false) final Integer size) {
+	                                            @RequestParam(value = "size", required = false) final Integer size) {
 		if (page == null && size == null) {
 			return createListToFromListEntity(restaurantService.getAll());
 		} else {
@@ -58,7 +57,7 @@ public class RestaurantRestController {
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@PathVariable final String id,
-	                                 @RequestBody final RestaurantTo restaurantTo) {
+	                                @RequestBody final RestaurantTo restaurantTo) {
 		Restaurant restaurant = createNewFromTo(restaurantTo);
 		assureIdConsistent(restaurant, Long.valueOf(id));
 		restaurantService.update(restaurant);

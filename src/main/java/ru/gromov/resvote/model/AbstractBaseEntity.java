@@ -6,7 +6,6 @@ package ru.gromov.resvote.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 

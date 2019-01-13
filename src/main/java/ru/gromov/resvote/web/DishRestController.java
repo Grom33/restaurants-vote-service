@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
-import ru.gromov.resvote.repository.RestaurantRepository;
 import ru.gromov.resvote.service.DishService;
 import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.DishTo;
@@ -38,8 +37,8 @@ public class DishRestController {
 
 	@GetMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Dish> getByRestaurant(@PathVariable final String restaurantId,
-	                                   @RequestParam(value = "date", required = false)
-	                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	                                  @RequestParam(value = "date", required = false)
+	                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		if (date == null) date = LocalDate.now();
 		return dishService.getByRestaurantId(Long.valueOf(restaurantId), date);
 	}
@@ -47,7 +46,7 @@ public class DishRestController {
 	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<Dish> addDishes(@PathVariable final String restaurantId,
-	                             @RequestBody final List<DishTo> dishes) {
+	                            @RequestBody final List<DishTo> dishes) {
 		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
 
 		List<Dish> dishList = dishes.stream()
@@ -64,7 +63,7 @@ public class DishRestController {
 
 	@PutMapping(value = "/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@RequestBody final Dish dish,
-	                                 @PathVariable final String id) {
+	                                @PathVariable final String id) {
 		assureIdConsistent(dish, Long.valueOf(id));
 		dishService.update(dish);
 		return new ResponseEntity<>(HttpStatus.OK);

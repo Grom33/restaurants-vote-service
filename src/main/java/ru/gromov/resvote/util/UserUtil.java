@@ -10,12 +10,12 @@ public class UserUtil {
 	private UserUtil() {
 	}
 
-	public static User getUserFromTo(UserTo userTo){
+	public static User getUserFromTo(UserTo userTo) {
 		return new User(userTo.getId(), userTo.getName(),
-				userTo.getEmail(),userTo.getPassword());
+				userTo.getEmail(), userTo.getPassword());
 	}
 
-	public static org.springframework.security.core.userdetails.User getUserDetailsFromUser(User user){
+	public static org.springframework.security.core.userdetails.User getUserDetailsFromUser(User user) {
 		return new org.springframework.security.core.userdetails.User(
 				user.getName(),
 				user.getPassword(),

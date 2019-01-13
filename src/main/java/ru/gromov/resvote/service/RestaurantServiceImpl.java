@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreFilter;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gromov.resvote.model.Restaurant;
@@ -21,6 +18,7 @@ import java.util.List;
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -63,11 +61,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return restaurantRepository.save(restaurant);
 	}
 
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
-	@Override
-	public Restaurant getRestaurantWithDishesByDate(final LocalDate date, final long id) {
-		return restaurantRepository.getRestaurantWithDishesByDate(date, id);
-	}
 
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
@@ -97,6 +90,4 @@ public class RestaurantServiceImpl implements RestaurantService {
 		log.info("Delete restaurant entity with id: {}", id);
 		restaurantRepository.deleteById(id);
 	}
-
-
 }

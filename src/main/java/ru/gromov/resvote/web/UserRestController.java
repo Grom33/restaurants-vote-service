@@ -12,8 +12,6 @@ import ru.gromov.resvote.service.UserService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
-import java.util.List;
-
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
@@ -27,31 +25,15 @@ public class UserRestController {
 	@Autowired
 	private final UserService userService;
 
+
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<User> getAllUsers() {
-		return userService.getAll();
-	}
-
-	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public User create(@RequestBody final UserTo user) {
-		return userService.create(UserUtil.getUserFromTo(user));
-	}
-
-	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public User getUser(@PathVariable final String id) {
-		return userService.getById(Long.valueOf(id));
+	public User getLoggedUser() {
+		return userService.getLoggedUser();
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@RequestBody final UserTo user) {
-		userService.update(UserUtil.getUserFromTo(user));
+	public ResponseEntity<?> updateLoggedUser(@RequestBody final UserTo user) {
+		userService.updateLoggedUser(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	@DeleteMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(@PathVariable final String id) {
-		userService.delete(Long.valueOf(id));
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

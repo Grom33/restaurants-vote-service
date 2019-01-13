@@ -1,5 +1,6 @@
 package ru.gromov.resvote.service;
 
+import org.springframework.data.domain.Page;
 import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 
@@ -9,6 +10,7 @@ import java.util.List;
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
+
 public interface VoteService {
 
 	List<Vote> getRestaurantVote(long id, LocalDate date);
@@ -18,5 +20,7 @@ public interface VoteService {
 	void makeVote(long id);
 
 	List<RestaurantWithVoteTo> getVotedRestaurants(LocalDate date);
+
+	Page<RestaurantWithVoteTo> getVotedRestaurantsPaginated(LocalDate date, int page, int size);
 }
 

@@ -21,8 +21,6 @@ public interface RestaurantService {
 
 	Restaurant addRestaurant(Restaurant restaurant);
 
-	Restaurant getRestaurantWithDishesByDate(LocalDate date, long id);
-
 	Restaurant getById(long id);
 
 	void update(Restaurant restaurant);

@@ -1,5 +1,7 @@
 package ru.gromov.resvote.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +30,9 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 			"FROM Vote v JOIN FETCH ru.gromov.resvote.model.Restaurant r ON r.id = v.restaurantId " +
 			"WHERE v.date =:date GROUP BY r.id ORDER BY count(v.id) DESC")
 	List<RestaurantWithVoteTo> getVotedRestaurants(@Param("date") LocalDate date);
+
+	@Query("SELECT new ru.gromov.resvote.to.RestaurantWithVoteTo(r.id, r.name, COUNT(v.id)) " +
+			"FROM Vote v JOIN FETCH ru.gromov.resvote.model.Restaurant r ON r.id = v.restaurantId " +
+			"WHERE v.date =:date GROUP BY r.id ORDER BY count(v.id) DESC")
+	Page<RestaurantWithVoteTo> getVotedRestaurantsPaginated(@Param("date") LocalDate date, Pageable pageable);
 }

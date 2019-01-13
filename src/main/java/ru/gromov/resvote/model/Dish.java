@@ -25,7 +25,6 @@ import java.time.LocalDate;
 public class Dish extends AbstractNamedEntity {
 
 	@NotNull
-	//@DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
 	@Column(name = "date", nullable = false)
 	private LocalDate date;
 

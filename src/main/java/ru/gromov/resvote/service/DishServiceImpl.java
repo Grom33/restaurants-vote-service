@@ -23,13 +23,6 @@ public class DishServiceImpl implements DishService {
 	@Autowired
 	private final DishRepository dishRepository;
 
-	@Secured("ROLE_ADMIN")
-	@Transactional
-	@Override
-	public Dish create(final Dish dish) {
-		return dishRepository.save(dish);
-	}
-
 	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional(readOnly = true)
 	@Override

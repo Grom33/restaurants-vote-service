@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
+import ru.gromov.resvote.security.SecurityService;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
 import java.util.List;
@@ -34,6 +33,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
+	private final SecurityService securityService;
 
 	@Transactional(readOnly = true)
 	@Override
@@ -57,10 +59,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public User create(final User user) {
 		Assert.notNull(user, "user must not be null");
-		if (user.getPassword() != null)	user.setPassword(
+		if (user.getPassword() != null) user.setPassword(
 				bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
+
 	@Secured("ROLE_ADMIN")
 	@Transactional(readOnly = true)
 	@Override
@@ -87,6 +90,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public void delete(final long id) {
 		userRepository.deleteById(id);
+	}
+
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Override
+	public User getLoggedUser() {
+		return securityService.getLoggedUser();
+	}
+
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Override
+	public void updateLoggedUser(User user) {
+		User loggedUser = securityService.getLoggedUser();
+		if (loggedUser.getId().equals(user.getId())) {
+			loggedUser.setName(user.getName());
+			loggedUser.setPassword(user.getPassword());
+			userRepository.save(loggedUser);
+		}
 	}
 
 

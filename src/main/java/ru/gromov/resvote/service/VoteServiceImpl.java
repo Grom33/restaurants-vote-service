@@ -6,6 +6,8 @@ package ru.gromov.resvote.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,6 @@ import ru.gromov.resvote.repository.VoteRepository;
 import ru.gromov.resvote.security.SecurityService;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.util.exception.DeadLineException;
-import ru.gromov.resvote.util.exception.UserNotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -36,10 +37,6 @@ public class VoteServiceImpl implements VoteService {
 	@Autowired
 	private final SecurityService securityService;
 
-	@Autowired
-	private final UserRepository userRepository;
-
-
 	@Transactional(readOnly = true)
 	@Override
 	public List<Vote> getRestaurantVote(final long id, final LocalDate date) {
@@ -56,10 +53,7 @@ public class VoteServiceImpl implements VoteService {
 	@Transactional
 	@Override
 	public void makeVote(final long id) {
-		String userName = securityService.getLoggedUserDetails().getUsername();
-		User user = userRepository.findByEmail(userName)
-				.orElseThrow(() -> new UserNotFoundException(
-						String.format("User with email %s not found", userName)));
+		final User user = securityService.getLoggedUser();
 		Vote vote;
 		if (LocalTime.now().isAfter(DEADLINE))
 			throw new DeadLineException("You can't vote after 11.00!");
@@ -78,6 +72,12 @@ public class VoteServiceImpl implements VoteService {
 	@Override
 	public List<RestaurantWithVoteTo> getVotedRestaurants(final LocalDate date) {
 		return voteRepository.getVotedRestaurants(date);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Page<RestaurantWithVoteTo> getVotedRestaurantsPaginated(final LocalDate date, int page, int size) {
+		return voteRepository.getVotedRestaurantsPaginated(date, PageRequest.of(page, size));
 	}
 
 

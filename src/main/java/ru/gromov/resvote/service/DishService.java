@@ -10,8 +10,6 @@ import java.util.List;
  */
 public interface DishService {
 
-	Dish create(Dish dish);
-
 	List<Dish> getAll();
 
 	Dish getById(long id);

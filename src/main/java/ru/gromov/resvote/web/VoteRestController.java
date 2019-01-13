@@ -52,9 +52,16 @@ public class VoteRestController {
 
 	@GetMapping(value = "/vote")
 	public List<RestaurantWithVoteTo> getListVotedRestaurants(@RequestParam(value = "date", required = false)
-	                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+	                                                          @RequestParam(value = "page", required = false) final Integer page,
+	                                                          @RequestParam(value = "size", required = false) final Integer size) {
 		if (date == null) date = LocalDate.now();
-		return voteService.getVotedRestaurants(date);
+		if (page == null && size == null) {
+			return voteService.getVotedRestaurants(date);
+		} else {
+			return voteService.getVotedRestaurantsPaginated(date, page, size).getContent();
+		}
+
 	}
 
 }
