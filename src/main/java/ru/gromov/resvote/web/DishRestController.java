@@ -9,13 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Dish;
+import ru.gromov.resvote.model.Restaurant;
+import ru.gromov.resvote.repository.RestaurantRepository;
 import ru.gromov.resvote.service.DishService;
+import ru.gromov.resvote.service.RestaurantService;
+import ru.gromov.resvote.to.DishTo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.gromov.resvote.util.ValidationUtil.*;
 
@@ -27,23 +33,36 @@ public class DishRestController {
 	@Autowired
 	DishService dishService;
 
-	@GetMapping(value = "/{restaurantId}/dishes")
+	@Autowired
+	RestaurantService restaurantService;
+
+	@GetMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 	private List<Dish> getByRestaurant(@PathVariable final String restaurantId,
 	                                   @RequestParam(value = "date", required = false)
-	                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate date) {
-		if (date == null) {
-			return dishService.getByRestaurantId(Long.valueOf(restaurantId), LocalDate.now());
-		} else {
-			return dishService.getByRestaurantId(Long.valueOf(restaurantId), date);
-		}
+	                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		if (date == null) date = LocalDate.now();
+		return dishService.getByRestaurantId(Long.valueOf(restaurantId), date);
 	}
 
-	@GetMapping(value = "/dishes/{id}")
+	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	private List<Dish> addDishes(@PathVariable final String restaurantId,
+	                             @RequestBody final List<DishTo> dishes) {
+		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
+
+		List<Dish> dishList = dishes.stream()
+				.map(dish -> new Dish(
+						dish.getName(), dish.getPrice(), restaurant, LocalDate.now()
+				)).collect(Collectors.toList());
+		return dishService.createAll(dishList);
+	}
+
+	@GetMapping(value = "/dishes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	private Dish get(@PathVariable final String id) {
 		return dishService.getById(Long.valueOf(id));
 	}
 
-	@PutMapping(value = "/dishes/{id}")
+	@PutMapping(value = "/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	private ResponseEntity<?> update(@RequestBody final Dish dish,
 	                                 @PathVariable final String id) {
 		assureIdConsistent(dish, Long.valueOf(id));

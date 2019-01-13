@@ -19,4 +19,5 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
 
 	@Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId AND d.date=:date ORDER BY d.date DESC")
 	List<Dish> getByRestaurantId(@Param("restaurantId") long id, @Param("date") LocalDate date);
+
 }

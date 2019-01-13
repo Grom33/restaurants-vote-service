@@ -21,4 +21,6 @@ public interface DishService {
 	void update(Dish dish);
 
 	void delete(Long id);
+
+	List<Dish> createAll(List<Dish> dishes);
 }

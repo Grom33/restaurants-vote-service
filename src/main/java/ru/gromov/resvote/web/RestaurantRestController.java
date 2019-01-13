@@ -66,14 +66,9 @@ public class RestaurantRestController {
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 	private List<Restaurant> getRestaurantWithDishesByDate(
 			@RequestParam(value = "date", required = false)
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate date) {
-		if (date == null) {
-			log.info("Get list with dishes on today");
-			return restaurantService.getAllRestaurantWithDishesByDate(LocalDate.now());
-		} else {
-			log.info("Get list with dishes on {}", date);
-			return restaurantService.getAllRestaurantWithDishesByDate(date);
-		}
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		if (date == null) date = LocalDate.now();
+		return restaurantService.getAllRestaurantWithDishesByDate(date);
 	}
 
 	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

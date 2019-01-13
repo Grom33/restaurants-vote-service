@@ -69,14 +69,14 @@ INSERT INTO dishes (id, name, date, price, rest_id) VALUES
 (45, 'Brownie Templado de Chocolate Blanco y Helado de Vainilla ', now(), 16.40, 5),
 (46, 'Chipirones a la Plancha sobre Cebolla Caramelizada y Alioli Negro ', now(), 17.80, 5);
 
-INSERT INTO vote (id, user_id, rest_id, date) VALUES
+INSERT INTO vote (id, user_id, restaurant_id, date) VALUES
 (1, 2, 1, '2019-01-03' ),
-(2, 3, 1, '2019-01-03'),
+(2, 3, 5, '2019-01-03'),
 (3, 4, 3, '2019-01-03'),
 (4, 5, 5, '2019-01-03'),
 (5, 6, 4, '2019-01-03'),
 (6, 2, 1, '2019-01-04'),
-(7, 3, 1, '2019-01-04'),
+(7, 3, 3, '2019-01-04'),
 (8, 4, 3, '2019-01-04'),
 (9, 5, 5, '2019-01-04'),
 (10, 6, 4, '2019-01-04'),

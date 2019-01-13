@@ -3,6 +3,7 @@ package ru.gromov.resvote.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.validator.constraints.SafeHtml;
+import ru.gromov.resvote.to.RestaurantWithVoteTo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

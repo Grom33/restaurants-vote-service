@@ -46,4 +46,8 @@ public class User extends AbstractNamedEntity {
 	@CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
 	@Column(name = "role")
 	private Set<Role> roles;
+
+	public User(long id, String name, String email, String password) {
+
+	}
 }

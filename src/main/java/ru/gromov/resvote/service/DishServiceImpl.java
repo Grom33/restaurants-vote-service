@@ -63,5 +63,10 @@ public class DishServiceImpl implements DishService {
 		dishRepository.deleteById(id);
 	}
 
+	@Override
+	public List<Dish> createAll(List<Dish> dishes) {
+		return dishRepository.saveAll(dishes);
+	}
+
 
 }

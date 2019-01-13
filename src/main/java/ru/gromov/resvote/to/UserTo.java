@@ -6,14 +6,18 @@ package ru.gromov.resvote.to;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+
 @Data
 @AllArgsConstructor
-public class RestaurantTo implements Serializable {
+@NoArgsConstructor
+public class UserTo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,4 +26,12 @@ public class RestaurantTo implements Serializable {
 	@NotBlank
 	@Size(min = 2, max = 100)
 	private String name;
+
+	@Email
+	@NotBlank
+	@Size(max = 100)
+	private String email;
+
+	@Size(min = 5, max = 32, message = "length must between 5 and 32 characters")
+	private String password;
 }

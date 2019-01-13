@@ -36,12 +36,12 @@ CREATE TABLE users
 CREATE UNIQUE INDEX users_email_idx ON users (email);
 
 CREATE TABLE vote (
-  id          BIGINT DEFAULT global_seq.nextval PRIMARY KEY,
-  user_id     BIGINT          NOT NULL,
-  rest_id     BIGINT          NOT NULL,
-  date        DATE            NOT NULL,
+  id            BIGINT DEFAULT global_seq.nextval PRIMARY KEY,
+  user_id       BIGINT          NOT NULL,
+  restaurant_id BIGINT          NOT NULL,
+  date          DATE            NOT NULL,
   CONSTRAINT user_date_unique_idx UNIQUE (user_id, date),
-  FOREIGN KEY (rest_id) REFERENCES restaurants (id) ON DELETE CASCADE,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 /*CREATE UNIQUE INDEX vote_rest_index ON vote (rest_id);
