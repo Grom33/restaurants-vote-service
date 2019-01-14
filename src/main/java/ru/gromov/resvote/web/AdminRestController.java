@@ -52,7 +52,7 @@ public class AdminRestController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable final String id) {
 		log.info("DELETE request: delete user by id: {}", id);
 		userService.delete(Long.valueOf(id));
