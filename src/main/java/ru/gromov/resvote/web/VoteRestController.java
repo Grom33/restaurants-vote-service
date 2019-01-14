@@ -16,6 +16,7 @@ import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.to.VoterTo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class VoteRestController {
 	@PostMapping(value = "/{id}/vote")
 	public ResponseEntity<?> makeVote(@PathVariable final String id) {
 		log.info("POST request: make user vote");
-		voteService.makeVote(Long.valueOf(id));
+		voteService.makeVote(Long.valueOf(id), LocalTime.now());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -63,7 +64,7 @@ public class VoteRestController {
 		if (page == null && size == null) {
 			return voteService.getVotedRestaurants(date);
 		} else {
-			return voteService.getVotedRestaurantsPaginated(date, page, size).getContent();
+			return voteService.getVotedRestaurantsPaginated(date, page, size);
 		}
 
 	}

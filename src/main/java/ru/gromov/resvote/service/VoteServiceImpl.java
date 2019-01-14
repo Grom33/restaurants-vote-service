@@ -55,21 +55,21 @@ public class VoteServiceImpl implements VoteService {
 
 	@Transactional
 	@Override
-	public void makeVote(final long id) {
-		log.info("Make user vote, restaurant id: {}", id);
+	public void makeVote(final long restaurantId, final LocalTime time) {
+		log.info("Make user vote, restaurant id: {}", restaurantId);
 		final User user = securityService.getLoggedUser();
 		Vote vote;
-		if (LocalTime.now().isAfter(DEADLINE))
+		if (time.isAfter(DEADLINE))
 			throw new DeadLineException("You can't vote after 11.00!");
 		Optional<Vote> optionalVote = voteRepository.getByUser_IdAndDate(user.getId(), LocalDate.now());
 		if (optionalVote.isPresent()) {
 			log.info("User has already voted, change the decision");
 			Vote oldVote = optionalVote.get();
-			oldVote.setRestaurantId(id);
+			oldVote.setRestaurantId(restaurantId);
 			vote = oldVote;
 		} else {
 			log.info("First user vote for today");
-			vote = new Vote(LocalDate.now(), id, user);
+			vote = new Vote(LocalDate.now(), restaurantId, user);
 		}
 		voteRepository.save(vote);
 	}
@@ -83,9 +83,9 @@ public class VoteServiceImpl implements VoteService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Page<RestaurantWithVoteTo> getVotedRestaurantsPaginated(final LocalDate date, int page, int size) {
+	public List<RestaurantWithVoteTo> getVotedRestaurantsPaginated(final LocalDate date, int page, int size) {
 		log.info("Get paginated list of vote result for date: {}, page: {}, size: {}", date, page, size);
-		return voteRepository.getVotedRestaurantsPaginated(date, PageRequest.of(page, size));
+		return voteRepository.getVotedRestaurantsPaginated(date, PageRequest.of(page, size)).getContent();
 	}
 
 

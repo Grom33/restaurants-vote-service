@@ -5,6 +5,7 @@ import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 /*
@@ -17,10 +18,10 @@ public interface VoteService {
 
 	void deleteCurrentVoteOfUser(long id);
 
-	void makeVote(long id);
+	void makeVote(long restaurantId, LocalTime time);
 
 	List<RestaurantWithVoteTo> getVotedRestaurants(LocalDate date);
 
-	Page<RestaurantWithVoteTo> getVotedRestaurantsPaginated(LocalDate date, int page, int size);
+	List<RestaurantWithVoteTo> getVotedRestaurantsPaginated(LocalDate date, int page, int size);
 }
 

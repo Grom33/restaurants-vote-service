@@ -1,0 +1,22 @@
+[
+  {
+    "restaurantId": 1,
+    "name": "Interim",
+    "vote": 2
+  },
+  {
+    "restaurantId": 3,
+    "name": "La Mi Venta Restaurant",
+    "vote": 1
+  },
+  {
+    "restaurantId": 4,
+    "name": "El Celler de Can Roca",
+    "vote": 1
+  },
+  {
+    "restaurantId": 5,
+    "name": "Restaurante Romesco",
+    "vote": 1
+  }
+]
