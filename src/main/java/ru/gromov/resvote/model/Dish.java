@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.format.annotation.DateTimeFormat;
-import ru.gromov.resvote.util.DateUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -27,7 +25,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Dish extends AbstractNamedEntity {
 
-	@DateTimeFormat(pattern = DateUtil.DATE_PATTERN)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@NotNull
 	@Column(name = "date", nullable = false)
