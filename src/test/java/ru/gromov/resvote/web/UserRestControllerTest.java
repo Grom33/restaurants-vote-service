@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -14,10 +13,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
-public class UserRestControllerTest extends AbstractRestControllerTest{
+public class UserRestControllerTest extends AbstractRestControllerTest {
 
 	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
-	private static final String EDITED_USER= "json/edited_user.json";
+	private static final String EDITED_USER = "json/edited_user.json";
 
 	@WithMockUser(value = "ivan@mail.ru")
 	@SneakyThrows
