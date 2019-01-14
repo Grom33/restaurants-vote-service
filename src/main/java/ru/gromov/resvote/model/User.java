@@ -4,6 +4,7 @@ package ru.gromov.resvote.model;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -34,6 +35,7 @@ public class User extends AbstractNamedEntity {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
+	@JsonIgnore
 	@NotBlank
 	@Length(min = 5)
 	@SafeHtml

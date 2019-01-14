@@ -36,6 +36,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Override
 	public User getLoggedUser() {
+		log.info("Get logged user");
 		return securityService.getLoggedUser();
 	}
 
@@ -43,6 +44,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Override
 	public void updateLoggedUser(User user) {
+		log.info("Update logged user");
 		User loggedUser = securityService.getLoggedUser();
 		if (loggedUser.getId().equals(user.getId())) {
 			loggedUser.setName(user.getName());
@@ -55,6 +57,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> getAll() {
+		log.info("Get list of users");
 		return userRepository.findAll();
 	}
 
@@ -63,6 +66,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	@Override
 	public User create(final User user) {
+		log.info("Create user: {}", user);
 		Assert.notNull(user, "user must not be null");
 		if (user.getPassword() != null) user.setPassword(
 				bCryptPasswordEncoder.encode(user.getPassword()));
@@ -73,6 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional(readOnly = true)
 	@Override
 	public User getById(final long id) {
+		log.info("Get user by id: {}", id);
 		return userRepository.findById(id)
 				.orElseThrow(() -> new UserNotFoundException(
 						String.format("User with id %s not found", id)));
@@ -83,6 +88,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	@Override
 	public void update(final User user) {
+		log.info("Update user: {}", user);
 		Assert.notNull(user, "user must not be null");
 		User oldUser = getById(user.getId());
 		oldUser.setName(user.getName());
@@ -96,6 +102,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	@Override
 	public void delete(final long id) {
+		log.info("Delete user by id: {}", id);
 		userRepository.deleteById(id);
 	}
 

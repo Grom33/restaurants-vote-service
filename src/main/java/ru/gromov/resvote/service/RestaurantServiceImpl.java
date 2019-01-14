@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -29,10 +28,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Autowired
 	private final RestaurantRepository restaurantRepository;
 
-	@Autowired
-	private final ProfileService profileService;
-
-
 	@Cacheable("restaurant")
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
@@ -47,7 +42,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllPaginated(final int page, final int size) {
-		log.info("Get paginated list of restaurants");
+		log.info("Get paginated list of restaurants. Page: {}, size: {}", page, size);
 		return restaurantRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 
@@ -56,14 +51,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDate(final LocalDate date) {
+		log.info("Get list of restaurants with dishes by date: {}", date);
 		return restaurantRepository.getAllRestaurantWithDishesByDate(date);
 	}
 
-	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
+	@CacheEvict(value = {"restaurant", "restaurant_with_dishes"}, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
 	public Restaurant addRestaurant(final Restaurant restaurant) {
+		log.info("Add restaurant: {}", restaurant);
 		return restaurantRepository.save(restaurant);
 	}
 
@@ -73,13 +70,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public Restaurant getById(final long id) {
 		log.info("Get restaurant with id {}", id);
-
 		return restaurantRepository.findById(id)
 				.orElseThrow(() -> new RestaurantNotFoundException(
 						String.format("Restaurant with id %s not found", id)));
 	}
 
-	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
+	@CacheEvict(value = {"restaurant", "restaurant_with_dishes"}, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
@@ -90,7 +86,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurantRepository.save(rest);
 	}
 
-	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
+	@CacheEvict(value = {"restaurant", "restaurant_with_dishes"}, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
@@ -104,6 +100,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDatePaginated(LocalDate date, Integer page, Integer size) {
+		log.info("Get paginated list of restaurants with dishes by date: {}, page: {}, size: {}", date, page, size);
 		return restaurantRepository.getAllRestaurantWithDishesByDatePaginated(date, PageRequest.of(page, size)).getContent();
 	}
 }

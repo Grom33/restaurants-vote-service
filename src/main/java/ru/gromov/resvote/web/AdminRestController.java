@@ -28,28 +28,33 @@ public class AdminRestController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<User> getAllUsers() {
+		log.info("GET request: get all users list");
 		return userService.getAll();
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public User create(@RequestBody final UserTo user) {
+		log.info("POST request: create user:{}", user);
 		return userService.create(UserUtil.getUserFromTo(user));
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public User getUser(@PathVariable final String id) {
+		log.info("GET request: get user by id: {}", id);
 		return userService.getById(Long.valueOf(id));
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@RequestBody final UserTo user) {
+		log.info("PUT request: update user: {}", user);
 		userService.update(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> delete(@PathVariable final String id) {
+		log.info("DELETE request: delete user by id: {}", id);
 		userService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

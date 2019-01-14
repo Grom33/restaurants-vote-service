@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService {
 
 	@Cacheable("user")
 	@Transactional(readOnly = true)
-	public User getUserByEmail(String email) {
-		log.info("load user from repo");
+	public User getUserByEmail(final String email) {
+		log.info("load user from repository by email: {}", email);
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException(
 						String.format("User with name %s, not found!", email)

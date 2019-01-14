@@ -17,7 +17,7 @@ public class UserUtil {
 
 	public static org.springframework.security.core.userdetails.User getUserDetailsFromUser(User user) {
 		return new org.springframework.security.core.userdetails.User(
-				user.getName(),
+				user.getEmail(),
 				user.getPassword(),
 				user.getRoles()
 		);

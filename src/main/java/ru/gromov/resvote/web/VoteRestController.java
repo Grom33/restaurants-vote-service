@@ -32,6 +32,7 @@ public class VoteRestController {
 	public List<VoterTo> getListVoteOfRestaurant(@PathVariable final String id,
 	                                             @RequestParam(value = "date", required = false)
 	                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		log.info("GET request: get list of vote by restaurant id: {}, and date {}", id, date);
 		if (date == null) date = LocalDate.now();
 		return voteService.getRestaurantVote(Long.valueOf(id), date).stream()
 				.map(v -> new VoterTo(v.getUser().getId(), v.getUser().getName()))
@@ -40,12 +41,14 @@ public class VoteRestController {
 
 	@DeleteMapping(value = "/vote")
 	public ResponseEntity<?> delete() {
+		log.info("DELETE request: delete user vote");
 		voteService.deleteCurrentVoteOfUser(1L);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping(value = "/{id}/vote")
 	public ResponseEntity<?> makeVote(@PathVariable final String id) {
+		log.info("POST request: make user vote");
 		voteService.makeVote(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -55,6 +58,7 @@ public class VoteRestController {
 	                                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 	                                                          @RequestParam(value = "page", required = false) final Integer page,
 	                                                          @RequestParam(value = "size", required = false) final Integer size) {
+		log.info("GET request: get list of restaurant with vote");
 		if (date == null) date = LocalDate.now();
 		if (page == null && size == null) {
 			return voteService.getVotedRestaurants(date);

@@ -39,6 +39,7 @@ public class DishRestController {
 	public List<Dish> getByRestaurant(@PathVariable final String restaurantId,
 	                                  @RequestParam(value = "date", required = false)
 	                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		log.info("GET request: get dishes list by restaurant id: {}, date: {}", restaurantId, date);
 		if (date == null) date = LocalDate.now();
 		return dishService.getByRestaurantId(Long.valueOf(restaurantId), date);
 	}
@@ -47,6 +48,7 @@ public class DishRestController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<Dish> addDishes(@PathVariable final String restaurantId,
 	                            @RequestBody final List<DishTo> dishes) {
+		log.info("POST request: add dishes to restaurant, id: {}, dishes count: {}", restaurantId, dishes.size());
 		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
 
 		List<Dish> dishList = dishes.stream()
@@ -58,12 +60,14 @@ public class DishRestController {
 
 	@GetMapping(value = "/dishes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Dish get(@PathVariable final String id) {
+		log.info("GET request: get dish by id {}", id);
 		return dishService.getById(Long.valueOf(id));
 	}
 
 	@PutMapping(value = "/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> update(@RequestBody final Dish dish,
 	                                @PathVariable final String id) {
+		log.info("PUT request: update dish by id {}, dish:", id, dish);
 		assureIdConsistent(dish, Long.valueOf(id));
 		dishService.update(dish);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -71,6 +75,7 @@ public class DishRestController {
 
 	@DeleteMapping(value = "/dishes/{id}")
 	public ResponseEntity<?> delete(@PathVariable final String id) {
+		log.info("DELETE request: delete dish by id: {}", id);
 		dishService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

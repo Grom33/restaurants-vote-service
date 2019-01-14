@@ -28,11 +28,13 @@ public class UserRestController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public User getLoggedUser() {
+		log.info("GET request: get logged user");
 		return profileService.getLoggedUser();
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateLoggedUser(@RequestBody final UserTo user) {
+		log.info("PUT request: update logged user");
 		profileService.updateLoggedUser(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
