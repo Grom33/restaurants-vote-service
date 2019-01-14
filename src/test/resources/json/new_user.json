@@ -1,0 +1,9 @@
+{
+  "name": "TEST USER",
+  "email": "test@mail.ru",
+  "enabled": true,
+  "registered": null,
+  "roles": [
+    "ROLE_USER"
+  ]
+}

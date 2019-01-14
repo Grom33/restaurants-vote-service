@@ -1,0 +1,10 @@
+{
+  "id": 2,
+  "name": "Ivan",
+  "email": "ivan@mail.ru",
+  "enabled": true,
+  "registered": null,
+  "roles": [
+    "ROLE_USER"
+  ]
+}

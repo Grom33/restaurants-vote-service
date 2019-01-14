@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Admin",
+    "email": "admin@mail.ru",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_ADMIN"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Ivan",
+    "email": "ivan@mail.ru",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_USER"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Petr",
+    "email": "petr@mail.ru",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_USER"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Irina",
+    "email": "irina@ya.ru",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_USER"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "John",
+    "email": "john@gmail.com",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_USER"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Julia",
+    "email": "julia@gmail.com",
+    "enabled": true,
+    "registered": null,
+    "roles": [
+      "ROLE_USER"
+    ]
+  }
+]
