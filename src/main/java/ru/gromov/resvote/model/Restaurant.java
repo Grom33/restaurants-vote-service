@@ -1,7 +1,10 @@
 package ru.gromov.resvote.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.SafeHtml;
 
 import javax.persistence.*;
@@ -21,10 +24,12 @@ import java.util.Set;
 @Table(name = "restaurants")
 @AllArgsConstructor
 @NoArgsConstructor
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Restaurant extends AbstractNamedEntity {
 
-	//@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	//@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	@OrderBy("name DESC")
 	@JsonManagedReference(value = "restaurant")
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

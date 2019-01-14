@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.service.UserService;
+import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
@@ -24,7 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminRestController {
 	@Autowired
-	private final UserService userService;
+	private final ProfileService userService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<User> getAllUsers() {

@@ -39,8 +39,7 @@ public class RestaurantRestController {
 		if (page == null && size == null) {
 			return createListToFromListEntity(restaurantService.getAll());
 		} else {
-			final Page<Restaurant> result = restaurantService.getAllPaginated(page, size);
-			return createListToFromListEntity(result.getContent());
+			return createListToFromListEntity(restaurantService.getAllPaginated(page, size));
 		}
 	}
 
@@ -67,9 +66,17 @@ public class RestaurantRestController {
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Restaurant> getRestaurantWithDishesByDate(
 			@RequestParam(value = "date", required = false)
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+			@RequestParam(value = "page", required = false) final Integer page,
+			@RequestParam(value = "size", required = false) final Integer size) {
+
 		if (date == null) date = LocalDate.now();
-		return restaurantService.getAllRestaurantWithDishesByDate(date);
+		if (page == null && size == null) {
+			return restaurantService.getAllRestaurantWithDishesByDate(date);
+		}else {
+			return restaurantService.getAllRestaurantWithDishesByDatePaginated(date, page, size);
+		}
+
 	}
 
 	@DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

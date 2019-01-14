@@ -3,6 +3,8 @@ package ru.gromov.resvote.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -28,9 +30,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 	private final RestaurantRepository restaurantRepository;
 
 	@Autowired
-	private final UserService userService;
+	private final ProfileService profileService;
 
 
+	@Cacheable("restaurant")
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
@@ -39,14 +42,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return restaurantRepository.findAll();
 	}
 
+	@Cacheable("restaurant")
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
-	public Page<Restaurant> getAllPaginated(final int page, final int size) {
+	public List<Restaurant> getAllPaginated(final int page, final int size) {
 		log.info("Get paginated list of restaurants");
-		return restaurantRepository.findAll(PageRequest.of(page, size));
+		return restaurantRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 
+	@Cacheable("restaurant_with_dishes")
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
@@ -54,6 +59,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 		return restaurantRepository.getAllRestaurantWithDishesByDate(date);
 	}
 
+	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
@@ -73,6 +79,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 						String.format("Restaurant with id %s not found", id)));
 	}
 
+	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
@@ -83,11 +90,20 @@ public class RestaurantServiceImpl implements RestaurantService {
 		restaurantRepository.save(rest);
 	}
 
+	@CacheEvict(value = {"restaurant","restaurant_with_dishes" }, allEntries = true)
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
 	public void delete(final long id) {
 		log.info("Delete restaurant entity with id: {}", id);
 		restaurantRepository.deleteById(id);
+	}
+
+	@Cacheable("restaurant")
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Transactional
+	@Override
+	public List<Restaurant> getAllRestaurantWithDishesByDatePaginated(LocalDate date, Integer page, Integer size) {
+		return restaurantRepository.getAllRestaurantWithDishesByDatePaginated(date, PageRequest.of(page, size)).getContent();
 	}
 }

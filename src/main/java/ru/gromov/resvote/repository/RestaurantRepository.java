@@ -1,5 +1,7 @@
 package ru.gromov.resvote.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,9 +26,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	@Query("SELECT DISTINCT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date")
 	List<Restaurant> getAllRestaurantWithDishesByDate(@Param("date") LocalDate date);
 
+	@Query("SELECT DISTINCT r FROM Restaurant r JOIN r.dishes d WHERE d.date =:date")
+	Page<Restaurant> getAllRestaurantWithDishesByDatePaginated(@Param("date") LocalDate date, Pageable pageable);
+
 	@Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date and r.id=:id")
 	Restaurant getRestaurantWithDishesByDate(@Param("date") LocalDate date, @Param("id") long id);
-
-
-
 }

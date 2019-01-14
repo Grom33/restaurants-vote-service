@@ -10,11 +10,16 @@ spring:
       ddl-auto: none
       generate-ddl: false
     properties:
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
       hibernate:
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
         format_sql: true
-
 server:
   port: 8787
-
-api:
-  root: api/v1

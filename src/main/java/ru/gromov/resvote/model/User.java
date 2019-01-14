@@ -6,6 +6,8 @@ package ru.gromov.resvote.model;
 
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.SafeHtml;
 
@@ -19,6 +21,8 @@ import java.util.Set;
 @Setter
 @ToString(callSuper = true)
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,6 +46,7 @@ public class User extends AbstractNamedEntity {
 	@Column(name = "registered", columnDefinition = "timestamp default now()")
 	private Date registered = new Date();
 
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(fetch = FetchType.EAGER)
 	@BatchSize(size = 200)

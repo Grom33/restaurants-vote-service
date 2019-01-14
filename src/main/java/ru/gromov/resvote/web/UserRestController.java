@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.service.UserService;
+import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
@@ -23,17 +23,17 @@ import ru.gromov.resvote.util.UserUtil;
 public class UserRestController {
 
 	@Autowired
-	private final UserService userService;
+	private final ProfileService profileService;
 
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public User getLoggedUser() {
-		return userService.getLoggedUser();
+		return profileService.getLoggedUser();
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateLoggedUser(@RequestBody final UserTo user) {
-		userService.updateLoggedUser(UserUtil.getUserFromTo(user));
+		profileService.updateLoggedUser(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
