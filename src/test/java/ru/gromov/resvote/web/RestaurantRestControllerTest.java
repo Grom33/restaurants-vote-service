@@ -4,9 +4,7 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultActions;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -15,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
-public class RestaurantRestControllerTest extends AbstractRestControllerTest{
+public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	private static final String ALL_RESTAURANTS = "json/restaurants_all.json";
 	private static final String NEW_RESTAURANT = "json/new_restaurant.json";
@@ -53,7 +51,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest{
 	public void getRestaurant() {
 		final int restaurantId = 1;
 		String json = util.getJsonString(util.getTestFile(RESTAURANT_ID_1).toPath());
-		mockMvc.perform(get(REST_URL + "restaurants/"+restaurantId))
+		mockMvc.perform(get(REST_URL + "restaurants/" + restaurantId))
 				.andExpect(status().isOk())
 				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(json));
@@ -65,7 +63,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest{
 	public void update() {
 		final int restaurantId = 1;
 		String json = util.getJsonString(util.getTestFile(EDITED_RESTAURANT_ID_1).toPath());
-		mockMvc.perform(put(REST_URL +  "restaurants/"+restaurantId)
+		mockMvc.perform(put(REST_URL + "restaurants/" + restaurantId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
@@ -89,7 +87,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest{
 	@Test
 	public void deleteRestaurant() {
 		final int restaurantId = 1;
-		mockMvc.perform(delete(REST_URL + "restaurants/"+restaurantId))
+		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId))
 				.andExpect(status().isNoContent());
 
 	}
@@ -102,6 +100,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest{
 				.andExpect(status().isMethodNotAllowed());
 
 	}
+
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
@@ -116,7 +115,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest{
 	@Test
 	public void notAllowedRequestWithId() {
 		final int restaurantId = 1;
-		mockMvc.perform(post(REST_URL + "restaurants/"+restaurantId))
+		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId))
 				.andExpect(status().isMethodNotAllowed());
 	}
 }

@@ -6,10 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
-import ru.gromov.resvote.model.Dish;
-import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
-import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.DeadLineException;
 
 import java.time.LocalDate;
@@ -17,7 +14,6 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.filter;
 import static org.junit.Assert.*;
 
 /*
@@ -58,7 +54,8 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void makeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 3;
-		voteService.makeVote(restaurantId, LocalTime.of(10,0));
+		VoteServiceImpl.setDeadline(LocalTime.now().plusHours(1));
+		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
@@ -68,7 +65,8 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void changeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 2;
-		voteService.makeVote(restaurantId, LocalTime.of(10,0));
+		VoteServiceImpl.setDeadline(LocalTime.now().plusHours(1));
+		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
@@ -78,7 +76,8 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void makeVoteAfterDeadline() {
 		final long restaurantId = 1L;
 		final int expectedCount = 3;
-		voteService.makeVote(restaurantId, LocalTime.of(11,15));
+		VoteServiceImpl.setDeadline(LocalTime.now().minusHours(1));
+		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
@@ -91,6 +90,7 @@ public class VoteServiceImplTest extends AbstractTest {
 				});
 		assertThat(voteService.getVotedRestaurants(LocalDate.now())).isEqualTo(votedRestaurants);
 	}
+
 	@WithMockUser
 	@Test
 	public void getVotedRestaurantsPaginated() {
@@ -98,7 +98,7 @@ public class VoteServiceImplTest extends AbstractTest {
 		final int size = 3;
 		final int countOfList = 3;
 		assertEquals(
-				voteService.getVotedRestaurantsPaginated(LocalDate.now(),page, size).size(),
+				voteService.getVotedRestaurantsPaginated(LocalDate.now(), page, size).size(),
 				countOfList);
 	}
 }

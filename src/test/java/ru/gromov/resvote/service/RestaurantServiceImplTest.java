@@ -7,17 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.AbstractNamedEntity;
-import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
-import sun.security.krb5.internal.crypto.RsaMd5CksumType;
+import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.filter;
 import static org.junit.Assert.*;
 
 /*
@@ -75,7 +72,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		Restaurant newRestaurant = new Restaurant();
 		newRestaurant.setName("Test");
 		Restaurant restaurant = restaurantService.addRestaurant(newRestaurant);
-		assertEquals((long)restaurant.getId(), newId);
+		assertEquals((long) restaurant.getId(), newId);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -88,7 +85,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test
+	@Test(expected = RestaurantNotFoundException.class)
 	public void getByWrongId() {
 		final int wrongId = 999;
 		restaurantService.getById(wrongId);
@@ -125,7 +122,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		final int size = 3;
 		final int countOfList = 3;
 		assertEquals(
-				restaurantService.getAllRestaurantWithDishesByDatePaginated(LocalDate.now(),page, size).size(),
+				restaurantService.getAllRestaurantWithDishesByDatePaginated(LocalDate.now(), page, size).size(),
 				countOfList);
 	}
 }

@@ -6,15 +6,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
-import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
-import javax.validation.constraints.AssertFalse;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.filter;
 import static org.junit.Assert.*;
 
 /*
@@ -98,7 +95,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 		final long userToDelete = 2L;
 		final int expectedUserCount = 5;
 		profileService.delete(userToDelete);
-		assertEquals(profileService.getAll().size(),expectedUserCount );
+		assertEquals(profileService.getAll().size(), expectedUserCount);
 
 	}
 }

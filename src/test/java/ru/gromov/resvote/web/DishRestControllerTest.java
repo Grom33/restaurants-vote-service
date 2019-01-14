@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,7 +74,7 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void deleteDish() {
 		final int dishId = 1;
-		mockMvc.perform(delete(REST_URL + "restaurants/dishes/"+dishId))
+		mockMvc.perform(delete(REST_URL + "restaurants/dishes/" + dishId))
 				.andExpect(status().isNoContent());
 	}
 }
