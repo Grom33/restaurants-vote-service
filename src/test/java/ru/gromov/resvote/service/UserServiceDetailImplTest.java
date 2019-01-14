@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class UserServiceDetailImplTest extends AbstractTest {
 
 	@Autowired
-	UserServiceDetailImpl userServiceDetail;
+	private UserServiceDetailImpl userServiceDetail;
 
 	@Test
 	public void loadUserByUsername() {

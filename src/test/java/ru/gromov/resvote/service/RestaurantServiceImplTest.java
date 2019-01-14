@@ -29,7 +29,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 
 
 	@Autowired
-	RestaurantService restaurantService;
+	private RestaurantService restaurantService;
 
 
 	@WithMockUser(roles = {"ADMIN"})

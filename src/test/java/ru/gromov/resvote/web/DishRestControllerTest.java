@@ -18,7 +18,6 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	private static final String DISH_ID_1 = "json/dish_id_1.json";
 	private static final String DISH_OF_RESTAURANT_ID_1 = "json/dishes_of_Rest_id_1.json";
 	private static final String EDITED_DISH = "json/edited_dish.json";
-	private static final String DISH_OF_RESTAURANT_ID_1_WITHOUT_DELETED_DISH = "json/dishes_of_Rest_id_1_without_deleted_dish.json";
 	private static final String NEW_DISHES = "json/new_dishes.json";
 
 	@WithMockUser(roles = {"ADMIN"})

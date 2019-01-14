@@ -34,10 +34,10 @@ public class DishServiceImplTest extends AbstractTest {
 	private static final String NEW_DISHES = "json/new_dishes.json";
 
 	@Autowired
-	RestaurantService restaurantService;
+	private RestaurantService restaurantService;
 
 	@Autowired
-	DishService dishService;
+	private DishService dishService;
 
 
 	@WithMockUser(roles = {"ADMIN"})

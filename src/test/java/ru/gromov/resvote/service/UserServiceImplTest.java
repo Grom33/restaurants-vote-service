@@ -12,7 +12,7 @@ import ru.gromov.resvote.AbstractTest;
 public class UserServiceImplTest extends AbstractTest {
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Test(expected = UsernameNotFoundException.class)
 	public void getUserByEmail() {

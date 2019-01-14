@@ -24,7 +24,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	private static final String NEW_USER = "json/new_user.json";
 
 	@Autowired
-	ProfileService profileService;
+	private ProfileService profileService;
 
 	@WithMockUser(value = "ivan@mail.ru")
 	@SneakyThrows

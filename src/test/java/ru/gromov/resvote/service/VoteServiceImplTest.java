@@ -21,11 +21,10 @@ import static org.junit.Assert.*;
  */
 public class VoteServiceImplTest extends AbstractTest {
 
-	private static final String VOTE_OF_RESTAURANT_ID_1 = "json/vote_of_rest_id_1.json";
 	private static final String VOTED_RESTAURANTS_TODAY = "json/voted_restaurants_today.json";
 
 	@Autowired
-	VoteService voteService;
+	private VoteService voteService;
 
 
 	@WithMockUser(roles = {"ADMIN"})

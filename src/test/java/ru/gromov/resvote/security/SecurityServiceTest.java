@@ -14,7 +14,7 @@ import ru.gromov.resvote.util.exception.UserNotFoundException;
 public class SecurityServiceTest extends AbstractTest {
 
 	@Autowired
-	SecurityService securityService;
+	private SecurityService securityService;
 
 	@WithMockUser(value = "admin111@mail.ru")
 	@SneakyThrows

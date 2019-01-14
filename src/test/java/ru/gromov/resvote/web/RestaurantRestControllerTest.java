@@ -17,11 +17,9 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	private static final String ALL_RESTAURANTS = "json/restaurants_all.json";
 	private static final String NEW_RESTAURANT = "json/new_restaurant.json";
-	private static final String ALL_RESTAURANTS_WITH_DISHES_TODAY = "json/restaurants_all.json";
 	private static final String ALL_RESTAURANTS_WITH_DISHES_20190103 = "json/restaurants_all_20190103.json";
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
 	private static final String EDITED_RESTAURANT_ID_1 = "json/edited_restaurant_id_1.json";
-	private static final String RESTAURANT_WITHOUT_ID_1 = "json/all_restaurant_without_id_1.json";
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
