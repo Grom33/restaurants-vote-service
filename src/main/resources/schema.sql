@@ -21,7 +21,6 @@ CREATE TABLE dishes (
   CONSTRAINT dish_unique_idx UNIQUE (rest_id, date, name),
   FOREIGN KEY (rest_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
-/*CREATE UNIQUE INDEX dishes_rest_index ON dishes (rest_id);*/
 
 CREATE TABLE users
 (
@@ -44,8 +43,6 @@ CREATE TABLE vote (
   FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-/*CREATE UNIQUE INDEX vote_rest_index ON vote (rest_id);
-CREATE UNIQUE INDEX vote_user_index ON vote (user_id);*/
 
 CREATE TABLE user_roles
 (
