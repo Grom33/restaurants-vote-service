@@ -1,7 +1,5 @@
 package ru.gromov.resvote.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import ru.gromov.resvote.model.Restaurant;
 
 import java.time.LocalDate;

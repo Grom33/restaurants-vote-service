@@ -3,7 +3,6 @@ package ru.gromov.resvote.web;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -75,11 +74,13 @@ public class RestaurantRestController {
 			@RequestParam(value = "page", required = false) final Integer page,
 			@RequestParam(value = "size", required = false) final Integer size) {
 		log.info("GET request: get restaurant with dishes by date: {}", date);
-		if (date == null) date = LocalDate.now();
+
+		LocalDate useDate = date;
+		if (useDate == null) useDate = LocalDate.now();
 		if (page == null && size == null) {
-			return restaurantService.getAllRestaurantWithDishesByDate(date);
-		}else {
-			return restaurantService.getAllRestaurantWithDishesByDatePaginated(date, page, size);
+			return restaurantService.getAllRestaurantWithDishesByDate(useDate);
+		} else {
+			return restaurantService.getAllRestaurantWithDishesByDatePaginated(useDate, page, size);
 		}
 
 	}

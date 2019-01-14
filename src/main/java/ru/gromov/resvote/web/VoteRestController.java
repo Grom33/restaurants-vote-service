@@ -34,8 +34,9 @@ public class VoteRestController {
 	                                             @RequestParam(value = "date", required = false)
 	                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 		log.info("GET request: get list of vote by restaurant id: {}, and date {}", id, date);
-		if (date == null) date = LocalDate.now();
-		return voteService.getRestaurantVote(Long.valueOf(id), date).stream()
+		LocalDate useDate = date;
+		if (useDate == null) useDate = LocalDate.now();
+		return voteService.getRestaurantVote(Long.valueOf(id), useDate).stream()
 				.map(v -> new VoterTo(v.getUser().getId(), v.getUser().getName()))
 				.collect(Collectors.toList());
 	}
@@ -60,11 +61,12 @@ public class VoteRestController {
 	                                                          @RequestParam(value = "page", required = false) final Integer page,
 	                                                          @RequestParam(value = "size", required = false) final Integer size) {
 		log.info("GET request: get list of restaurant with vote");
-		if (date == null) date = LocalDate.now();
+		LocalDate useDate = date;
+		if (useDate == null) useDate = LocalDate.now();
 		if (page == null && size == null) {
-			return voteService.getVotedRestaurants(date);
+			return voteService.getVotedRestaurants(useDate);
 		} else {
-			return voteService.getVotedRestaurantsPaginated(date, page, size);
+			return voteService.getVotedRestaurantsPaginated(useDate, page, size);
 		}
 
 	}

@@ -19,6 +19,7 @@ import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.DishTo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +39,11 @@ public class DishRestController {
 	@GetMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Dish> getByRestaurant(@PathVariable final String restaurantId,
 	                                  @RequestParam(value = "date", required = false)
-	                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+	                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate date) {
 		log.info("GET request: get dishes list by restaurant id: {}, date: {}", restaurantId, date);
-		if (date == null) date = LocalDate.now();
-		return dishService.getByRestaurantId(Long.valueOf(restaurantId), date);
+		LocalDate useDate = date;
+		if (date == null) useDate = LocalDate.now();
+		return dishService.getByRestaurantId(Long.valueOf(restaurantId), useDate);
 	}
 
 	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
