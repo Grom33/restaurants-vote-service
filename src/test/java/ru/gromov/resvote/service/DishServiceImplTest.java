@@ -39,14 +39,6 @@ public class DishServiceImplTest extends AbstractTest {
 	@Autowired
 	DishService dishService;
 
-	@Test
-	@SneakyThrows
-	public void getAll() {
-		List<Dish> dishes = objectMapper.readValue(
-				util.getTestFile(ALL_DISHES), new TypeReference<List<Dish>>() {
-				});
-		System.out.println(dishes);
-	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@Test
