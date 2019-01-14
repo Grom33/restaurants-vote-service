@@ -28,14 +28,6 @@ public class DishServiceImpl implements DishService {
 	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional(readOnly = true)
 	@Override
-	public List<Dish> getAll() {
-		log.info("Get all dishes");
-		return dishRepository.findAll();
-	}
-
-	@Secured({"ROLE_ADMIN", "ROLE_USER"})
-	@Transactional(readOnly = true)
-	@Override
 	public Dish getById(final long id) {
 		log.info("Get dish by Id: {}", id);
 		return dishRepository.findById(id).orElseThrow(() -> new DishNotFoundException(

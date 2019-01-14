@@ -89,6 +89,14 @@ public class RestaurantServiceImplTest extends AbstractTest {
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
+	public void getByWrongId() {
+		final int wrongId = 999;
+		restaurantService.getById(wrongId);
+	}
+
+	@WithMockUser(roles = {"ADMIN"})
+	@SneakyThrows
+	@Test
 	public void update() {
 		final Restaurant restaurantId1 = objectMapper.readValue(util.getTestFile(RESTAURANT_ID_1), Restaurant.class);
 		restaurantId1.setName("TEST UPDATED");

@@ -62,6 +62,16 @@ public class VoteServiceImplTest extends AbstractTest {
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
+	@WithMockUser(value = "ivan@mail.ru")
+	@SneakyThrows
+	@Test
+	public void changeVote() {
+		final long restaurantId = 1L;
+		final int expectedCount = 2;
+		voteService.makeVote(restaurantId, LocalTime.of(10,0));
+		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
+	}
+
 	@WithMockUser(value = "admin@mail.ru", roles = {"ADMIN"})
 	@SneakyThrows
 	@Test(expected = DeadLineException.class)

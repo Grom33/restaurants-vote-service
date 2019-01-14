@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
+import ru.gromov.resvote.util.exception.DishNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,6 +46,14 @@ public class DishServiceImplTest extends AbstractTest {
 	public void getById() {
 		final Dish dish = objectMapper.readValue(util.getTestFile(DISH_ID_1), Dish.class);
 		assertEquals(dishService.getById(dish.getId()), dish);
+	}
+
+	@WithMockUser(roles = {"ADMIN"})
+	@Test(expected = DishNotFoundException.class)
+	@SneakyThrows
+	public void getByIdWrongId() {
+		final int wrongId = 999;
+		dishService.getById(wrongId);
 	}
 
 	@SneakyThrows

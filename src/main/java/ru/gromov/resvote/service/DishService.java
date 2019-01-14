@@ -10,8 +10,6 @@ import java.util.List;
  */
 public interface DishService {
 
-	List<Dish> getAll();
-
 	Dish getById(long id);
 
 	List<Dish> getByRestaurantId(long id, LocalDate date);

@@ -8,11 +8,13 @@ import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.util.exception.UserNotFoundException;
 
 import javax.validation.constraints.AssertFalse;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.filter;
 import static org.junit.Assert.*;
 
 /*
@@ -70,6 +72,14 @@ public class ProfileServiceImplTest extends AbstractTest {
 	public void getById() {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
 		assertEquals(profileService.getById(user.getId()), user);
+	}
+
+	@WithMockUser(roles = {"ADMIN"})
+	@SneakyThrows
+	@Test(expected = UserNotFoundException.class)
+	public void getByWrongId() {
+		final int wrongId = 999;
+		profileService.getById(wrongId);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
