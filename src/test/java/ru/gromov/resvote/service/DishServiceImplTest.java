@@ -26,7 +26,6 @@ import static org.junit.Assert.*;
 
 public class DishServiceImplTest extends AbstractTest {
 
-	private static final String ALL_DISHES = "json/all_dish.json";
 	private static final String DISH_ID_1 = "json/dish_id_1.json";
 	private static final String DISH_OF_RESTAURANT_ID_1 = "json/dishes_of_Rest_id_1.json";
 	private static final String EDITED_DISH = "json/edited_dish.json";
