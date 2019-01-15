@@ -22,8 +22,6 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
 	List<Vote> findAllByRestaurantIdAndDateOrderByUser(Long id, LocalDate date);
 
-	void deleteByUser_IdAndDate(Long id, LocalDate date);
-
 	Optional<Vote> getByUser_IdAndDate(Long id, LocalDate date);
 
 	@Query("SELECT new ru.gromov.resvote.to.RestaurantWithVoteTo(r.id, r.name, COUNT(v.id)) " +

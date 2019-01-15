@@ -36,14 +36,13 @@ public class VoteServiceImplTest extends AbstractTest {
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser(value = "petr@mail.ru")
 	@SneakyThrows
 	@Test
 	public void deleteCurrentVoteOfUser() {
-		final long restaurantId = 1L;
+		final long restaurantId = 3L;
 		final int expectedCount = 1;
-		final long userId = 2L;
-		voteService.deleteCurrentVoteOfUser(userId);
+		voteService.deleteCurrentVoteOfUser();
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 

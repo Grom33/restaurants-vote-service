@@ -91,19 +91,4 @@ public class RestaurantRestController {
 		restaurantService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-	@PutMapping
-	@DeleteMapping
-	public ResponseEntity<?> notAllowedRequest() {
-		return methodNotAllowedResponse();
-	}
-
-	@PostMapping(value = "/{id}")
-	public ResponseEntity<?> notAllowedRequestWithId() {
-		return methodNotAllowedResponse();
-	}
-
-	private ResponseEntity<?> methodNotAllowedResponse() {
-		return new ResponseEntity<>("METHOD_NOT_ALLOWED", HttpStatus.METHOD_NOT_ALLOWED);
-	}
 }

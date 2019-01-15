@@ -108,31 +108,4 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isNoContent());
 		assertEquals(restaurantService.getAll().size(), newRestaurantCount);
 	}
-
-	@WithMockUser
-	@SneakyThrows
-	@Test
-	public void notAllowedRequestDelete() {
-		mockMvc.perform(delete(REST_URL + "restaurants"))
-				.andExpect(status().isMethodNotAllowed());
-
-	}
-
-	@WithMockUser
-	@SneakyThrows
-	@Test
-	public void notAllowedRequestPut() {
-		mockMvc.perform(put(REST_URL + "restaurants"))
-				.andExpect(status().isMethodNotAllowed());
-
-	}
-
-	@WithMockUser
-	@SneakyThrows
-	@Test
-	public void notAllowedRequestWithId() {
-		final int restaurantId = 1;
-		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId))
-				.andExpect(status().isMethodNotAllowed());
-	}
 }

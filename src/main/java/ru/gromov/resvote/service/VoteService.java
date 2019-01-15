@@ -15,7 +15,7 @@ public interface VoteService {
 
 	List<Vote> getRestaurantVote(long id, LocalDate date);
 
-	void deleteCurrentVoteOfUser(long id);
+	void deleteCurrentVoteOfUser();
 
 	void makeVote(long restaurantId, LocalTime time);
 

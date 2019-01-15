@@ -5,6 +5,7 @@ package ru.gromov.resvote.model;
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
@@ -33,7 +34,7 @@ public class User extends AbstractNamedEntity {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank
 	@Length(min = 5)
 	@Column(name = "password", nullable = false)

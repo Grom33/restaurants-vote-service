@@ -2,13 +2,16 @@ package ru.gromov.resvote.web;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import ru.gromov.resvote.service.VoteService;
 import ru.gromov.resvote.service.VoteServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +23,10 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 
 	private static final String VOTE_OF_RESTAURANT_ID_1 = "json/vote_of_rest_id_1.json";
 	private static final String VOTED_RESTAURANTS_TODAY = "json/voted_restaurants_today.json";
+
+
+	@Autowired
+	private VoteService voteService;
 
 	@WithMockUser
 	@SneakyThrows
@@ -34,12 +41,16 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(content().json(json));
 	}
 
-	@WithMockUser(value = "ivan@mail.ru")
+	@WithMockUser(value = "petr@mail.ru")
 	@SneakyThrows
 	@Test
 	public void deleteVote() {
+		final long restaurantId = 3L;
+		final int expectedCount = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/vote"))
 				.andExpect(status().isNoContent());
+		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
+
 	}
 
 	@WithMockUser(value = "ivan@mail.ru")

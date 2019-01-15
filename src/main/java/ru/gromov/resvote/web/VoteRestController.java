@@ -44,7 +44,7 @@ public class VoteRestController {
 	@DeleteMapping(value = "/vote")
 	public ResponseEntity<?> delete() {
 		log.info("DELETE request: delete user vote");
-		voteService.deleteCurrentVoteOfUser(1L);
+		voteService.deleteCurrentVoteOfUser();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

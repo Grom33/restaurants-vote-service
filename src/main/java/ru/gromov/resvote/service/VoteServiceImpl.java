@@ -50,9 +50,15 @@ public class VoteServiceImpl implements VoteService {
 
 	@Transactional
 	@Override
-	public void deleteCurrentVoteOfUser(final long id) {
-		log.info("Delete user vote by user id: {}", id);
-		voteRepository.deleteByUser_IdAndDate(id, LocalDate.now());
+	public void deleteCurrentVoteOfUser() {
+		log.info("Delete user vote by user");
+		final User user = securityService.getLoggedUser();
+		Optional<Vote> optionalVote = voteRepository.getByUser_IdAndDate(user.getId(), LocalDate.now());
+		if (optionalVote.isPresent()) {
+			Vote oldVote = optionalVote.get();
+			voteRepository.deleteById(oldVote.getId());
+		}
+		//voteRepository.deleteByUser_IdAndDate(id, LocalDate.now());
 	}
 
 
