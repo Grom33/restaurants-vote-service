@@ -4,8 +4,6 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultActions;
-
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -72,7 +70,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void deleteUser() {
 		final int userId = 2;
-		mockMvc.perform(delete(REST_URL + "admin/users/"+userId))
+		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());
 	}
 }
