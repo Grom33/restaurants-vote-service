@@ -19,7 +19,6 @@ import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.DishTo;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

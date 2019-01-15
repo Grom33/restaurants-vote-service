@@ -1,6 +1,5 @@
 package ru.gromov.resvote.service;
 
-import org.springframework.data.domain.Page;
 import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 

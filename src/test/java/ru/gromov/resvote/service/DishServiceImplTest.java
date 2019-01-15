@@ -79,7 +79,7 @@ public class DishServiceImplTest extends AbstractTest {
 		List<Dish> dishesOfRestauranId1 = objectMapper.readValue(
 				util.getTestFile(DISH_OF_RESTAURANT_ID_1), new TypeReference<List<Dish>>() {
 				});
-		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.now())).isEqualTo(dishesOfRestauranId1);
+		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.of(2019,1,3))).isEqualTo(dishesOfRestauranId1);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

@@ -38,7 +38,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void create() {
 		String json = util.getJsonString(util.getTestFile(NEW_USER).toPath());
-		ResultActions action = mockMvc.perform(post(REST_URL + "admin/users")
+		mockMvc.perform(post(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
@@ -61,7 +61,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void update() {
 		String json = util.getJsonString(util.getTestFile(EDITED_USER).toPath());
-		ResultActions action = mockMvc.perform(put(REST_URL + "admin/users")
+		mockMvc.perform(put(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());

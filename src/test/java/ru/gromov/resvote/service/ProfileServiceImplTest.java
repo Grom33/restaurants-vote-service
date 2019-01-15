@@ -39,8 +39,10 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Test
 	public void updateLoggedUser() {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
-		user.setEmail("TEST UPDATE");
+		user.setName("TEST");
+		user.setPassword("123456");
 		profileService.updateLoggedUser(user);
+		assertEquals(profileService.getLoggedUser(), user);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

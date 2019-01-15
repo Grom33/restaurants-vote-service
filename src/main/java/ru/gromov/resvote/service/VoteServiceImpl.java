@@ -31,16 +31,15 @@ public class VoteServiceImpl implements VoteService {
 
 	private static LocalTime deadline = LocalTime.of(11, 0, 0);
 
-
-	public static void setDeadline(LocalTime deadline) {
-		VoteServiceImpl.deadline = deadline;
-	}
-
 	@Autowired
 	private final VoteRepository voteRepository;
 
 	@Autowired
 	private final SecurityService securityService;
+
+	public static void setDeadline(LocalTime deadline) {
+		VoteServiceImpl.deadline = deadline;
+	}
 
 	@Transactional(readOnly = true)
 	@Override

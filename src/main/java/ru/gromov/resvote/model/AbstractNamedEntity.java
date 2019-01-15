@@ -23,7 +23,6 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 	@NotBlank
 	@Size(min = 1, max = 100)
 	@Column(name = "name", nullable = false)
-	@SafeHtml
 	protected String name;
 
 	public AbstractNamedEntity(Long id, @NotBlank @Size(min = 1, max = 100) @SafeHtml String name) {

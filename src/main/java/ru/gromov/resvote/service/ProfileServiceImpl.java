@@ -48,7 +48,7 @@ public class ProfileServiceImpl implements ProfileService {
 		User loggedUser = securityService.getLoggedUser();
 		if (loggedUser.getId().equals(user.getId())) {
 			loggedUser.setName(user.getName());
-			loggedUser.setPassword(user.getPassword());
+			loggedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			userRepository.save(loggedUser);
 		}
 	}

@@ -31,14 +31,12 @@ public class User extends AbstractNamedEntity {
 
 	@Email
 	@NotBlank
-	@SafeHtml
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
 	@JsonIgnore
 	@NotBlank
 	@Length(min = 5)
-	@SafeHtml
 	@Column(name = "password", nullable = false)
 	private String password;
 
