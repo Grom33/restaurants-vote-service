@@ -17,7 +17,6 @@ import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping(value = "api/v1/admin/users")
