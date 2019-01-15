@@ -34,4 +34,6 @@ public class UserTo implements Serializable {
 
 	@Size(min = 5, max = 32, message = "length must between 5 and 32 characters")
 	private String password;
+
+
 }

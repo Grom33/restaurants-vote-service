@@ -33,7 +33,7 @@ public class User extends AbstractNamedEntity {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 
-	@JsonIgnore
+
 	@NotBlank
 	@Length(min = 5)
 	@Column(name = "password", nullable = false)

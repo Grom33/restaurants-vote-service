@@ -2,9 +2,13 @@ package ru.gromov.resvote.web;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.service.ProfileService;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -17,6 +21,9 @@ public class UserRestControllerTest extends AbstractRestControllerTest {
 
 	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
 	private static final String EDITED_USER = "json/edited_user.json";
+
+	@Autowired
+	private ProfileService profileService;
 
 	@WithMockUser(value = "ivan@mail.ru")
 	@SneakyThrows
@@ -38,5 +45,7 @@ public class UserRestControllerTest extends AbstractRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
+		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
+		assertEquals(profileService.getLoggedUser(), user);
 	}
 }

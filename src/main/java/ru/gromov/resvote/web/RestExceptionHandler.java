@@ -1,5 +1,6 @@
 package ru.gromov.resvote.web;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,4 +33,12 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(
 				ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN);
 	}
+
+	@ExceptionHandler({ConstraintViolationException.class})
+	public ResponseEntity<Object> handleSQLException(final Exception ex) {
+		return new ResponseEntity<>(
+				ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+	}
+
+
 }

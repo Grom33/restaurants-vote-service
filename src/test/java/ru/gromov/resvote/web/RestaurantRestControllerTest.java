@@ -2,13 +2,20 @@ package ru.gromov.resvote.web;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultActions;
+import ru.gromov.resvote.model.Restaurant;
+import ru.gromov.resvote.service.RestaurantService;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.gromov.resvote.TestUtil.getContent;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -21,7 +28,10 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
 	private static final String EDITED_RESTAURANT_ID_1 = "json/edited_restaurant_id_1.json";
 
-	@WithMockUser(roles = {"ADMIN"})
+	@Autowired
+	private RestaurantService restaurantService;
+
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAllRestaurants() {
@@ -36,14 +46,19 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	@SneakyThrows
 	@Test
 	public void addRestaurant() {
+		final int newUserCount = 6;
 		String json = util.getJsonString(util.getTestFile(NEW_RESTAURANT).toPath());
-		mockMvc.perform(post(REST_URL + "restaurants")
+		ResultActions action = mockMvc.perform(post(REST_URL + "restaurants")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
+		Restaurant restaurant = objectMapper.readValue(getContent(action), Restaurant.class);
+		assertFalse(restaurant.isNew());
+		assertEquals(restaurantService.getAll().size(), newUserCount);
+
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getRestaurant() {
@@ -65,9 +80,12 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
+		Restaurant restaurant = objectMapper.readValue(
+				util.getTestFile(EDITED_RESTAURANT_ID_1), Restaurant.class);
+		assertEquals(restaurantService.getById(restaurant.getId()), restaurant);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getRestaurantWithDishesByDate() {
@@ -84,13 +102,14 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	@SneakyThrows
 	@Test
 	public void deleteRestaurant() {
+		final int newRestaurantCount = 4;
 		final int restaurantId = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId))
 				.andExpect(status().isNoContent());
-
+		assertEquals(restaurantService.getAll().size(), newRestaurantCount);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void notAllowedRequestDelete() {
@@ -99,7 +118,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void notAllowedRequestPut() {
@@ -108,7 +127,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void notAllowedRequestWithId() {

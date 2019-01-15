@@ -34,9 +34,9 @@ public class AdminRestController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public User create(@RequestBody final UserTo user) {
+	public User create(@RequestBody final User user) {
 		log.info("POST request: create user:{}", user);
-		return userService.create(UserUtil.getUserFromTo(user));
+		return userService.create(user);
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

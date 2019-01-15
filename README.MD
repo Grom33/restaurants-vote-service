@@ -2,11 +2,10 @@
 [![codecov](https://codecov.io/gh/Grom33/restaurants-vote-service/branch/master/graph/badge.svg)](https://codecov.io/gh/Grom33/restaurants-vote-service)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8f850660161e439eba36748c2aadc531)](https://www.codacy.com/app/Grom33/restaurants-vote-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Grom33/restaurants-vote-service&amp;utm_campaign=Badge_Grade)
 
-# **Restaurant vote system**
+# **Graduation project: "Restaurant vote system"**
     
-## Voiting system for deciding where to have lunch
 ### Grdauation task
-Build a voiting system for deciding where to have lunch.
+Build a voting system for deciding where to have lunch.
 
     - 2 types of users: admin and regular users
     - Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a dish name and price)

@@ -2,12 +2,21 @@ package ru.gromov.resvote.web;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.ResultActions;
+import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.service.ProfileService;
 
+import javax.validation.constraints.AssertFalse;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.gromov.resvote.TestUtil.getContent;
 
 
 /*
@@ -15,10 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class AdminRestControllerTest extends AbstractRestControllerTest {
 
+
 	private static final String USERS_LIST = "json/users_list.json";
 	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
 	private static final String NEW_USER = "json/new_user.json";
 	private static final String EDITED_USER = "json/edited_user.json";
+
+	@Autowired
+	private ProfileService profileService;
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
@@ -35,11 +48,15 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 	@SneakyThrows
 	@Test
 	public void create() {
+		final int newUserCount = 7;
 		String json = util.getJsonString(util.getTestFile(NEW_USER).toPath());
-		mockMvc.perform(post(REST_URL + "admin/users")
+		ResultActions action = mockMvc.perform(post(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
+		User user = objectMapper.readValue(getContent(action), User.class);
+		assertFalse(user.isNew());
+		assertEquals(profileService.getAll().size(), newUserCount);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -63,14 +80,18 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
+		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
+		assertEquals(profileService.getById(user.getId()), user);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
 	public void deleteUser() {
+		final int newUserCount = 5;
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());
+		assertEquals(profileService.getAll().size(), newUserCount);
 	}
 }

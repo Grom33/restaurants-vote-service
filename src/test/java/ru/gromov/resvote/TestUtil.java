@@ -1,8 +1,10 @@
 package ru.gromov.resvote;
 
 import lombok.SneakyThrows;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,5 +28,9 @@ public class TestUtil {
 			stream.forEach(s -> contentBuilder.append(s).append("\n"));
 		}
 		return contentBuilder.toString();
+	}
+
+	public static String getContent(ResultActions action) throws UnsupportedEncodingException {
+		return action.andReturn().getResponse().getContentAsString();
 	}
 }
