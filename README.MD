@@ -6,6 +6,7 @@
     
 ### Graduation task
 Build a voting system for deciding where to have lunch.
+Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boot) **without frontend** 
 
     - 2 types of users: admin and regular users
     - Admin can input a restaurant and it's lunch menu of the day (2-5 items usually, just a dish name and price)
@@ -17,7 +18,7 @@ Build a voting system for deciding where to have lunch.
         - If it is after 11:00 then it is too late, vote can't be changed
     
 ##### Tech stack
-> Spring Frameworks (Boot, DATA JPA, MVC);
+> Spring Frameworks (Boot, DATA JPA, MVC); Hibernate;
 > Embedded DB (H2);
 > Swagger API Documetation 
      
