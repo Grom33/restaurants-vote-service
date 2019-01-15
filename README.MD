@@ -32,103 +32,108 @@ Build a voting system for deciding where to have lunch.
 ![admin-rest-controller](https://user-images.githubusercontent.com/16654366/51135037-28a41800-184a-11e9-9cbd-e702cbbc62a5.jpg)
 
 ### cURL commands:
-0.Get restaurants rating 
+1.Get restaurants rating, today: 
+ > curl -s http://localhost:8787/api/v1/restaurants/vote --user ivan@mail.ru:password
+ 
+1.1 Get restaurants rating for 2019-01-03 : 
+  
+  > curl -s 'http://localhost:8787/api/v1/restaurants/vote?date=2019-01-03' --user ivan@mail.ru:password
 
-1.Get all restaurants:
+2.Get all restaurants:
 
  > curl -s http://localhost:8787/api/v1/restaurants --user ivan@mail.ru:password
  
-1.1 Get all restaurants paginated:
+2.1 Get all restaurants paginated:
 
  > curl -s 'http://localhost:8787/api/v1/restaurants/?page=0&size=3' --user ivan@mail.ru:password
  
-2.Create restaurant:
+3.Create restaurant:
 
 > curl -s -X POST -d '{"name": "TEST RESTAURANT"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/restaurants --user admin@mail.ru:password
 
-3.Get restaurant with ID #1
+4.Get restaurant with ID #1
  
 > curl -s http://localhost:8787/api/v1/restaurants/1 --user ivan@mail.ru:password 
 
-4.Update restaurant with ID #1
+5.Update restaurant with ID #1
 
 > curl -s -X PUT -d '{"id": "1", "name": "TEST RESTAURANT"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/restaurants/1 --user admin@mail.ru:password
 
-5.Delete restaurant with ID #1
+6.Delete restaurant with ID #1
 
 > curl -s -X DELETE http://localhost:8787/api/v1/restaurants/1 --user admin@mail.ru:password
 
-6.Get restaurant with dishes
+7.Get restaurant with dishes
 
 > curl -s http://localhost:8787/api/v1/restaurants/dishes --user ivan@mail.ru:password
 
-6.1 Get restaurant with dishes paginated
+7.1 Get restaurant with dishes paginated
 
 > curl -s 'http://localhost:8787/api/v1/restaurants/dishes?page=0&size=3' --user ivan@mail.ru:password
 
-7.Get dishes of restaurant with ID #2
+8.Get dishes of restaurant with ID #2
 
 > curl -s http://localhost:8787/api/v1/restaurants/2/dishes --user ivan@mail.ru:password
 
-8.Add dishes to restaurant with ID #2
+9.Add dishes to restaurant with ID #2
 
 >curl -s -X POST -d '[{"name": "Test dish 1", "price": 99.11},{"name": "Test dish 2","price": 0.11}]' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/restaurants/2/dishes --user admin@mail.ru:password
 
-9.Get dish with id #10
+10.Get dish with id #10
 
 > curl -s http://localhost:8787/api/v1/restaurants/dishes/10 --user ivan@mail.ru:password
 
-10.Update dish with ID #10
+11.Update dish with ID #10
 
 > curl -s -X PUT -d '{ "id": 10, "name": "Edited dish", "date": "2019-01-03", "price": 23.9}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/restaurants/dishes/10 --user admin@mail.ru:password
 
-11.Delete dish with ID #10
+12.Delete dish with ID #10
 
 > curl -s -X DELETE http://localhost:8787/api/v1/restaurants/dishes/10 --user admin@mail.ru:password
 
-12.Get list voters of restaurant with ID #3 for today
+13.Get list voters of restaurant with ID #3 for today
 
 > curl -s 'http://localhost:8787/api/v1/restaurants/3/vote' --user ivan@mail.ru:password
 
-12.1 Get list voters of restaurant with ID #3 for 2019-01-04
+13.1 Get list voters of restaurant with ID #3 for 2019-01-04
 
 > curl -s 'http://localhost:8787/api/v1/restaurants/3/vote?date=2019-01-04' --user ivan@mail.ru:password
 
-13.Make vote for restaurant by logged user
+14.Make vote for restaurant by logged user
 > curl -s -X POST 'http://localhost:8787/api/v1/restaurants/3/vote' --user ivan@mail.ru:password
 
-14.Change vote of logged user(Attention! If the current server time is over 11.00, you will get an exception "You can't vote after 11.00!")
+15.Change vote of logged user(Attention! If the current server time is over 11.00, you will get an exception "You can't vote after 11.00!")
 
 > curl -s -X POST 'http://localhost:8787/api/v1/restaurants/3/vote' --user petr@mail.ru:password
 
-15.Delete vote of logged user
+16.Delete vote of logged user
 
 > curl -s -X DELETE http://localhost:8787/api/v1/restaurants/vote --user irina@ya.ru:password
 
-16.Get profile of logged user
+17.Get profile of logged user
 
 > curl -s 'http://localhost:8787/api/v1/users' --user ivan@mail.ru:password
 
-17.Update logged user profile
+18.Update logged user profile
 
 > curl -s -X PUT -d '{"id": 2,"name": "TEST TEST","email": "ivan@mail.ru", "password": "password"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/users --user ivan@mail.ru:password
 
-18.Get list of users
+19.Get list of users
 
 > curl -s 'http://localhost:8787/api/v1/admin/users' --user admin@mail.ru:password
 
-19.Create user
+20.Create user
 
 > curl -s -X POST -d '{"name": "TEST USER","email": "test@mail.ru","password": "password", "roles": [ "ROLE_USER" ]}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/admin/users --user admin@mail.ru:password
 
-20.Update user with ID #2
+21.Update user with ID #2
 
 > curl -s -X PUT -d '{"id": 2,"name": "TEST TEST","email": "ivan@mail.ru", "password": "password"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/admin/users --user admin@mail.ru:password
 
-21.Get user with ID #2
+22.Get user with ID #2
 
 > curl -s 'http://localhost:8787/api/v1/admin/users/2' --user admin@mail.ru:password
 
-22.Delete user with ID #2
+23.Delete user with ID #2
 
 > curl -s -X DELETE http://localhost:8787/api/v1/admin/users/2 --user admin@mail.ru:password
