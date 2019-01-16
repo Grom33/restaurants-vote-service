@@ -15,10 +15,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+import static ru.gromov.resvote.TestUtil.setDeadlineTime;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
+
 public class VoteServiceImplTest extends AbstractTest {
 
 	private static final String VOTED_RESTAURANTS_TODAY = "json/voted_restaurants_today.json";
@@ -46,13 +48,14 @@ public class VoteServiceImplTest extends AbstractTest {
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
+
 	@WithMockUser(value = "admin@mail.ru", roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
 	public void makeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 3;
-		VoteServiceImpl.setDeadline(LocalTime.now().plusHours(1));
+		setDeadlineTime(LocalTime.now().plusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
@@ -63,7 +66,7 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void changeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 2;
-		VoteServiceImpl.setDeadline(LocalTime.now().plusHours(1));
+		setDeadlineTime(LocalTime.now().plusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
@@ -74,7 +77,7 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void makeVoteAfterDeadline() {
 		final long restaurantId = 1L;
 		final int expectedCount = 3;
-		VoteServiceImpl.setDeadline(LocalTime.now().minusHours(1));
+		setDeadlineTime(LocalTime.now().minusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}

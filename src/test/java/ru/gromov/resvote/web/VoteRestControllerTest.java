@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.service.VoteService;
-import ru.gromov.resvote.service.VoteServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.gromov.resvote.TestUtil.setDeadlineTime;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -58,7 +58,7 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void makeVote() {
 		final int restaurantId = 1;
-		VoteServiceImpl.setDeadline(LocalTime.now().plusHours(1));
+		setDeadlineTime(LocalTime.now().plusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
 				.andExpect(status().isOk());
 	}
@@ -68,7 +68,7 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void makeVoteAfterDeadline() {
 		final int restaurantId = 1;
-		VoteServiceImpl.setDeadline(LocalTime.now().minusHours(1));
+		setDeadlineTime(LocalTime.now().minusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
 				.andExpect(status().isForbidden());
 	}

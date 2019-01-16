@@ -7,6 +7,7 @@ package ru.gromov.resvote.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
-	private static LocalTime deadline = LocalTime.of(11, 0, 0);
+	@Value("${settings.deadline}")
+	private static String deadline;
 
 	@Autowired
 	private final VoteRepository voteRepository;
 
 	@Autowired
 	private final SecurityService securityService;
-
-	public static void setDeadline(LocalTime deadline) {
-		VoteServiceImpl.deadline = deadline;
-	}
 
 	@Transactional(readOnly = true)
 	@Override
@@ -68,7 +66,7 @@ public class VoteServiceImpl implements VoteService {
 		log.info("Make user vote, restaurant id: {}", restaurantId);
 		final User user = securityService.getLoggedUser();
 		Vote vote;
-		if (time.isAfter(deadline))
+		if (time.isAfter(LocalTime.parse(deadline)))
 			throw new DeadLineException("You can't vote after 11.00!");
 		Optional<Vote> optionalVote = voteRepository.getByUser_IdAndDate(user.getId(), LocalDate.now());
 		if (optionalVote.isPresent()) {

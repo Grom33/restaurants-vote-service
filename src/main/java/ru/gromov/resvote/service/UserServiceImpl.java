@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private final UserRepository userRepository;
 
+	// Use cache for users to prevent invoke DB for each request, because we use stateless REST
 	@Cacheable("user")
 	@Transactional(readOnly = true)
 	public User getUserByEmail(final String email) {

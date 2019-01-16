@@ -1,7 +1,9 @@
 package ru.gromov.resvote;
 
 import lombok.SneakyThrows;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.gromov.resvote.service.VoteServiceImpl;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -32,5 +34,12 @@ public class TestUtil {
 
 	public static String getContent(ResultActions action) throws UnsupportedEncodingException {
 		return action.andReturn().getResponse().getContentAsString();
+	}
+
+	public static void setDeadlineTime(String timeIso) {
+		ReflectionTestUtils.setField(
+				VoteServiceImpl.class,
+				"deadline",
+				timeIso);
 	}
 }
