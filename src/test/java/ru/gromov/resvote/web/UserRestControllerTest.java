@@ -46,6 +46,6 @@ public class UserRestControllerTest extends AbstractRestControllerTest {
 				.content(json))
 				.andExpect(status().isOk());
 		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		assertEquals(profileService.getLoggedUser(), user);
+		assertEquals(profileService.getLoggedUser().getName(), user.getName());
 	}
 }

@@ -25,13 +25,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Secured({"ROLE_ADMIN", "ROLE_USER"})
 @Service
 @RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
 	@Value("${settings.deadline}")
-	private static String deadline;
+	private String deadline;
 
 	@Autowired
 	private final VoteRepository voteRepository;
@@ -46,6 +45,7 @@ public class VoteServiceImpl implements VoteService {
 		return voteRepository.findAllByRestaurantIdAndDateOrderByUser(id, date);
 	}
 
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional
 	@Override
 	public void deleteCurrentVoteOfUser() {
@@ -59,18 +59,21 @@ public class VoteServiceImpl implements VoteService {
 		//voteRepository.deleteByUser_IdAndDate(id, LocalDate.now());
 	}
 
-
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional
 	@Override
 	public void makeVote(final long restaurantId, final LocalTime time) {
-		log.info("Make user vote, restaurant id: {}", restaurantId);
+		log.info("Make user vote, restaurant id: {},current time {},  deadline is {}",
+				restaurantId, time, LocalTime.parse(deadline));
 		final User user = securityService.getLoggedUser();
 		Vote vote;
-		if (time.isAfter(LocalTime.parse(deadline)))
-			throw new DeadLineException("You can't vote after 11.00!");
 		Optional<Vote> optionalVote = voteRepository.getByUser_IdAndDate(user.getId(), LocalDate.now());
 		if (optionalVote.isPresent()) {
 			log.info("User has already voted, change the decision");
+			if (time.isAfter(LocalTime.parse(deadline))) {
+				log.info("User {} try to vote after deadline!", user.getName());
+				throw new DeadLineException("You can't change your vote after 11.00 AM!");
+			}
 			Vote oldVote = optionalVote.get();
 			oldVote.setRestaurantId(restaurantId);
 			vote = oldVote;

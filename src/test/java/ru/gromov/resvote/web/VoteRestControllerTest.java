@@ -58,7 +58,7 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void makeVote() {
 		final int restaurantId = 1;
-		setDeadlineTime(LocalTime.now().plusHours(1).toString());
+		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
 				.andExpect(status().isOk());
 	}
@@ -68,7 +68,7 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 	@Test
 	public void makeVoteAfterDeadline() {
 		final int restaurantId = 1;
-		setDeadlineTime(LocalTime.now().minusHours(1).toString());
+		setDeadlineTime(voteService, LocalTime.now().minusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
 				.andExpect(status().isForbidden());
 	}

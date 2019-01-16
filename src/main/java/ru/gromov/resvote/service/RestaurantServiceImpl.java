@@ -29,7 +29,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	private final RestaurantRepository restaurantRepository;
 
 	@Cacheable("restaurant")
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAll() {
@@ -38,7 +37,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Cacheable("restaurant")
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllPaginated(final int page, final int size) {
@@ -47,7 +45,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Cacheable("restaurant_with_dishes")
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDate(final LocalDate date) {
@@ -65,7 +62,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional(readOnly = true)
 	@Override
 	public Restaurant getById(final long id) {
@@ -96,7 +92,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Cacheable("restaurant")
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDatePaginated(LocalDate date, Integer page, Integer size) {

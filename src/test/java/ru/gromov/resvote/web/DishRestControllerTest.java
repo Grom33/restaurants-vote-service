@@ -20,7 +20,7 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	private static final String EDITED_DISH = "json/edited_dish.json";
 	private static final String NEW_DISHES = "json/new_dishes.json";
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getByRestaurant() {
@@ -45,7 +45,7 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isOk());
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getDish() {

@@ -56,21 +56,6 @@ public class DishServiceImplTest extends AbstractTest {
 		dishService.getById(wrongId);
 	}
 
-	@SneakyThrows
-	@Test(expected = AuthenticationCredentialsNotFoundException.class)
-	public void getByIdWithoutCredential() {
-		final Dish dish = objectMapper.readValue(util.getTestFile(DISH_ID_1), Dish.class);
-		assertEquals(dishService.getById(dish.getId()), dish);
-	}
-
-	@WithAnonymousUser
-	@SneakyThrows
-	@Test(expected = AccessDeniedException.class)
-	public void getByIdByAnonymous() {
-		final Dish dish = objectMapper.readValue(util.getTestFile(DISH_ID_1), Dish.class);
-		assertEquals(dishService.getById(dish.getId()), dish);
-	}
-
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test

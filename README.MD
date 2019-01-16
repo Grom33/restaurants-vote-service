@@ -34,19 +34,19 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 ### cURL commands:
 1.Get restaurants rating, today: 
- > curl -s http://localhost:8787/api/v1/restaurants/vote --user ivan@mail.ru:password
+ > curl -s http://localhost:8787/api/v1/restaurants/vote
  
 1.1 Get restaurants rating for 2019-01-03 : 
   
-  > curl -s 'http://localhost:8787/api/v1/restaurants/vote?date=2019-01-03' --user ivan@mail.ru:password
+  > curl -s 'http://localhost:8787/api/v1/restaurants/vote?date=2019-01-03'
 
 2.Get all restaurants:
 
- > curl -s http://localhost:8787/api/v1/restaurants --user ivan@mail.ru:password
+ > curl -s http://localhost:8787/api/v1/restaurants
  
 2.1 Get all restaurants paginated:
 
- > curl -s 'http://localhost:8787/api/v1/restaurants/?page=0&size=3' --user ivan@mail.ru:password
+ > curl -s 'http://localhost:8787/api/v1/restaurants/?page=0&size=3'
  
 3.Create restaurant:
 
@@ -54,7 +54,7 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 4.Get restaurant with ID #1
  
-> curl -s http://localhost:8787/api/v1/restaurants/1 --user ivan@mail.ru:password 
+> curl -s http://localhost:8787/api/v1/restaurants/1 
 
 5.Update restaurant with ID #1
 
@@ -66,15 +66,15 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 7.Get restaurant with dishes
 
-> curl -s http://localhost:8787/api/v1/restaurants/dishes --user ivan@mail.ru:password
+> curl -s http://localhost:8787/api/v1/restaurants/dishes
 
 7.1 Get restaurant with dishes paginated
 
-> curl -s 'http://localhost:8787/api/v1/restaurants/dishes?page=0&size=3' --user ivan@mail.ru:password
+> curl -s 'http://localhost:8787/api/v1/restaurants/dishes?page=0&size=3' 
 
 8.Get dishes of restaurant with ID #2
 
-> curl -s http://localhost:8787/api/v1/restaurants/2/dishes --user ivan@mail.ru:password
+> curl -s http://localhost:8787/api/v1/restaurants/2/dishes
 
 9.Add dishes to restaurant with ID #2
 
@@ -82,7 +82,7 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 10.Get dish with id #10
 
-> curl -s http://localhost:8787/api/v1/restaurants/dishes/10 --user ivan@mail.ru:password
+> curl -s http://localhost:8787/api/v1/restaurants/dishes/10
 
 11.Update dish with ID #10
 
@@ -94,11 +94,11 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 13.Get list voters of restaurant with ID #3 for today
 
-> curl -s 'http://localhost:8787/api/v1/restaurants/3/vote' --user ivan@mail.ru:password
+> curl -s 'http://localhost:8787/api/v1/restaurants/3/vote'
 
 13.1 Get list voters of restaurant with ID #3 for 2019-01-04
 
-> curl -s 'http://localhost:8787/api/v1/restaurants/3/vote?date=2019-01-04' --user ivan@mail.ru:password
+> curl -s 'http://localhost:8787/api/v1/restaurants/3/vote?date=2019-01-04'
 
 14.Make vote for restaurant by logged user
 > curl -s -X POST 'http://localhost:8787/api/v1/restaurants/3/vote' --user ivan@mail.ru:password

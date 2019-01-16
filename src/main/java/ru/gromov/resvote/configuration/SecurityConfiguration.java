@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,10 +43,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http
 				.cors().and()
 				.csrf().disable()
-				// https://stackoverflow.com/questions/34130036/how-to-understand-restful-api-is-stateless
+				// https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
-				.antMatchers("/api/**").authenticated()
-				.and().httpBasic();
+				.antMatchers(HttpMethod.GET,"/api/**").permitAll()
+				//.antMatchers("/api/**").authenticated()
+				.antMatchers("**/users/**").hasAnyRole("ADMIN","USER")
+				.antMatchers("**/admin/users/**").hasRole("ADMIN")
+				.anyRequest().authenticated().and()
+				//.antMatchers("/api/**").authenticated().and()
+				.httpBasic();
 	}
 }

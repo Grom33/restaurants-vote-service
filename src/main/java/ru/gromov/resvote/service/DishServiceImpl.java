@@ -25,7 +25,6 @@ public class DishServiceImpl implements DishService {
 	@Autowired
 	private final DishRepository dishRepository;
 
-	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional(readOnly = true)
 	@Override
 	public Dish getById(final long id) {
@@ -34,7 +33,6 @@ public class DishServiceImpl implements DishService {
 				String.format("Dish with id %s not found!", id)));
 	}
 
-	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@Transactional(readOnly = true)
 	@Override
 	public List<Dish> getByRestaurantId(final long id, final LocalDate date) {
