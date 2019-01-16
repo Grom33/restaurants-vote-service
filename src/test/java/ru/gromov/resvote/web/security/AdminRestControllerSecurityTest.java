@@ -2,119 +2,130 @@ package ru.gromov.resvote.web.security;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.util.NestedServletException;
-import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.service.ProfileService;
-import ru.gromov.resvote.web.AbstractRestControllerTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.gromov.resvote.TestUtil.getContent;
+
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
-public class AdminRestControllerSecurityTest extends AbstractRestControllerTest {
 
-	private static final String USERS_LIST = "json/users_list.json";
-	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
+public class AdminRestControllerSecurityTest extends AbstractSecurityControllerTest {
+
 	private static final String NEW_USER = "json/new_user.json";
 	private static final String EDITED_USER = "json/edited_user.json";
 
-	@Autowired
-	private ProfileService profileService;
-
 	@WithMockUser
 	@SneakyThrows
-	@Test(expected = NestedServletException.class)
-	public void getAllUsersByUser() {
-		mockMvc.perform(get(REST_URL + "admin/users"));
-	}
-
-/*
-	@WithMockUser(roles = {"ADMIN"})
-	@SneakyThrows
 	@Test
-	public void getAllUsersByAdmin() {
-		String json = util.getJsonString(util.getTestFile(USERS_LIST).toPath());
-		mockMvc.perform(get(REST_URL + "admin/users"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(json));
+	public void getAllUsersByUser() {
+		getAllUsers();
 	}
 
 	@WithAnonymousUser
 	@SneakyThrows
 	@Test
 	public void getAllUsersByAnonymous() {
-		String json = util.getJsonString(util.getTestFile(USERS_LIST).toPath());
-		mockMvc.perform(get(REST_URL + "admin/users"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(json));
+		getAllUsers();
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	private void getAllUsers() throws Exception {
+		expectedNestedException(AccessDeniedException.class);
+		mockMvc.perform(get(REST_URL + "admin/users"));
+	}
+
+	@WithMockUser
 	@SneakyThrows
 	@Test
-	public void create() {
-		final int newUserCount = 7;
+	public void createByUser() {
+		createUser();
+
+	}
+
+	@WithAnonymousUser
+	@SneakyThrows
+	@Test
+	public void createByAnonymous() {
+		createUser();
+	}
+
+	private void createUser() throws Exception {
+		expectedNestedException(AccessDeniedException.class);
+
 		String json = util.getJsonString(util.getTestFile(NEW_USER).toPath());
-		ResultActions action = mockMvc.perform(post(REST_URL + "admin/users")
+		mockMvc.perform(post(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
-				.andExpect(status().isOk());
-		User user = objectMapper.readValue(getContent(action), User.class);
-		assertFalse(user.isNew());
-		assertEquals(profileService.getAll().size(), newUserCount);
+				.content(json));
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
-	public void getUser() {
+	public void getUserByUser() {
+		getUser();
+	}
+
+	@WithAnonymousUser
+	@SneakyThrows
+	@Test
+	public void getUserByAnonymous() {
+		getUser();
+	}
+
+	private void getUser() throws Exception {
+		expectedNestedException(AccessDeniedException.class);
 		final int userId = 2;
-		String json = util.getJsonString(util.getTestFile(LOGGED_USER_IVAN).toPath());
 		mockMvc.perform(get(REST_URL + "admin/users/" + userId))
-				.andExpect(status().isOk())
-				.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-				.andExpect(content().json(json));
+				.andExpect(status().isOk());
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
-	public void update() {
+	public void updateByUser() {
+		updateUser();
+	}
+
+	@WithAnonymousUser
+	@SneakyThrows
+	@Test
+	public void updateByAnonymous() {
+		updateUser();
+	}
+
+	private void updateUser() throws Exception {
+		expectedNestedException(AccessDeniedException.class);
 		String json = util.getJsonString(util.getTestFile(EDITED_USER).toPath());
 		mockMvc.perform(put(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
-		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		assertEquals(profileService.getById(user.getId()), user);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
-	public void deleteUser() {
-		final int newUserCount = 5;
+	public void deleteUserByUser() {
+		expectedNestedException(AccessDeniedException.class);
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());
-		assertEquals(profileService.getAll().size(), newUserCount);
 	}
-*/
 
+	@WithAnonymousUser
+	@SneakyThrows
+	@Test
+	public void deleteUserByAnonymous() {
+		expectedNestedException(AccessDeniedException.class);
+		final int userId = 2;
+		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
+				.andExpect(status().isNoContent());
+	}
 
 }

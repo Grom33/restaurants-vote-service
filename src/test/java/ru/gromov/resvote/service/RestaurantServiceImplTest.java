@@ -25,7 +25,6 @@ public class RestaurantServiceImplTest extends AbstractTest {
 	private static final String ALL_RESTAURANTS = "json/restaurants_all.json";
 	private static final String ALL_RESTAURANTS_WITH_DISHES_TODAY = "json/restaurants_all.json";
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
-	private static final String RESTAURANT_WITHOUT_ID_1 = "json/all_restaurant_without_id_1.json";
 
 
 	@Autowired
@@ -104,14 +103,11 @@ public class RestaurantServiceImplTest extends AbstractTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test
+	@Test(expected = RestaurantNotFoundException.class)
 	public void delete() {
 		final long deletedId = 1L;
 		restaurantService.delete(deletedId);
-		final List<Restaurant> restaurants = objectMapper.readValue(
-				util.getTestFile(RESTAURANT_WITHOUT_ID_1), new TypeReference<List<Restaurant>>() {
-				});
-		assertThat(restaurantService.getAll()).isEqualTo(restaurants);
+		restaurantService.getById(deletedId);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

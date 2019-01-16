@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
+import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,7 +32,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	@Autowired
 	private RestaurantService restaurantService;
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAllRestaurants() {
@@ -58,7 +58,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	}
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getRestaurant() {
@@ -85,7 +84,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 		assertEquals(restaurantService.getById(restaurant.getId()), restaurant);
 	}
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getRestaurantWithDishesByDate() {
@@ -100,12 +98,11 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test
+	@Test(expected = RestaurantNotFoundException.class)
 	public void deleteRestaurant() {
-		final int newRestaurantCount = 4;
 		final int restaurantId = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId))
 				.andExpect(status().isNoContent());
-		assertEquals(restaurantService.getAll().size(), newRestaurantCount);
+		restaurantService.getById(restaurantId);
 	}
 }

@@ -28,7 +28,6 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 	@Autowired
 	private VoteService voteService;
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getListVoteOfRestaurant() {
@@ -73,7 +72,6 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isForbidden());
 	}
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getListVotedRestaurants() {

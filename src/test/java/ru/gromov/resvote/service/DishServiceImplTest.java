@@ -27,7 +27,6 @@ public class DishServiceImplTest extends AbstractTest {
 	private static final String DISH_ID_1 = "json/dish_id_1.json";
 	private static final String DISH_OF_RESTAURANT_ID_1 = "json/dishes_of_Rest_id_1.json";
 	private static final String EDITED_DISH = "json/edited_dish.json";
-	private static final String DISH_OF_RESTAURANT_ID_1_WITHOUT_DELETED_DISH = "json/dishes_of_Rest_id_1_without_deleted_dish.json";
 	private static final String NEW_DISHES = "json/new_dishes.json";
 
 	@Autowired
@@ -58,10 +57,10 @@ public class DishServiceImplTest extends AbstractTest {
 	@Test
 	public void getByRestaurantId() {
 		final long restaurantId = 1L;
-		List<Dish> dishesOfRestauranId1 = objectMapper.readValue(
+		List<Dish> dishesOfRestaurantId1 = objectMapper.readValue(
 				util.getTestFile(DISH_OF_RESTAURANT_ID_1), new TypeReference<List<Dish>>() {
 				});
-		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.of(2019, 1, 3))).isEqualTo(dishesOfRestauranId1);
+		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.of(2019, 1, 3))).isEqualTo(dishesOfRestaurantId1);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -75,15 +74,11 @@ public class DishServiceImplTest extends AbstractTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test
+	@Test(expected = DishNotFoundException.class)
 	public void delete() {
 		final long dishToDelete = 9L;
-		final long restaurantId = 1L;
 		dishService.delete(dishToDelete);
-		List<Dish> dishesOfRestaurantId1 = objectMapper.readValue(
-				util.getTestFile(DISH_OF_RESTAURANT_ID_1_WITHOUT_DELETED_DISH), new TypeReference<List<Dish>>() {
-				});
-		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.now())).isEqualTo(dishesOfRestaurantId1);
+		dishService.getById(dishToDelete);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

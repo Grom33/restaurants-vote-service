@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
-import ru.gromov.resvote.util.exception.DeadLineException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -56,6 +55,20 @@ public class VoteServiceImplTest extends AbstractTest {
 		final long restaurantId = 1L;
 		final int expectedCount = 3;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
+		voteService.makeVote(restaurantId, LocalTime.now());
+		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
+	}
+
+	@WithMockUser(value = "petr@mail.ru")
+	@SneakyThrows
+	@Test
+	public void makeVoteByUserManyTimes() {
+		final long restaurantId = 1L;
+		final int expectedCount = 2;
+		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
+		voteService.makeVote(restaurantId, LocalTime.now());
+		voteService.makeVote(restaurantId, LocalTime.now());
+		voteService.makeVote(restaurantId, LocalTime.now());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}

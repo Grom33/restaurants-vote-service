@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,13 @@ public class ProfileServiceImpl implements ProfileService {
 	public void updateLoggedUser(User user) {
 		log.info("Update logged user");
 		User loggedUser = securityService.getLoggedUser();
-		if (loggedUser.getId().equals(user.getId())) {
-			loggedUser.setName(user.getName());
-			loggedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			userRepository.save(loggedUser);
+		if (!loggedUser.getId().equals(user.getId())) {
+			log.info("User {}, try edit another user profile: {}", loggedUser, user);
+			throw new AccessDeniedException("This action is prohibited!");
 		}
+		loggedUser.setName(user.getName());
+		loggedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		userRepository.save(loggedUser);
 	}
 
 	@Secured("ROLE_ADMIN")

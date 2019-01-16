@@ -92,12 +92,10 @@ public class ProfileServiceImplTest extends AbstractTest {
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
-	@Test
+	@Test(expected = UserNotFoundException.class)
 	public void delete() {
 		final long userToDelete = 2L;
-		final int expectedUserCount = 5;
 		profileService.delete(userToDelete);
-		assertEquals(profileService.getAll().size(), expectedUserCount);
-
+		profileService.getById(userToDelete);
 	}
 }
