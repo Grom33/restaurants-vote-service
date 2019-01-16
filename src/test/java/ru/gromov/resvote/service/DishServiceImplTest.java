@@ -4,9 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.Dish;
@@ -64,7 +61,7 @@ public class DishServiceImplTest extends AbstractTest {
 		List<Dish> dishesOfRestauranId1 = objectMapper.readValue(
 				util.getTestFile(DISH_OF_RESTAURANT_ID_1), new TypeReference<List<Dish>>() {
 				});
-		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.of(2019,1,3))).isEqualTo(dishesOfRestauranId1);
+		assertThat(dishService.getByRestaurantId(restaurantId, LocalDate.of(2019, 1, 3))).isEqualTo(dishesOfRestauranId1);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

@@ -4,7 +4,6 @@ package ru.gromov.resvote.model;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;

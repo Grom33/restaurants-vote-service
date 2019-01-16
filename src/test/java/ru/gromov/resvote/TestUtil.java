@@ -4,9 +4,7 @@ import lombok.SneakyThrows;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.gromov.resvote.service.VoteService;
-import ru.gromov.resvote.service.VoteServiceImpl;
 
-import javax.xml.ws.Service;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
