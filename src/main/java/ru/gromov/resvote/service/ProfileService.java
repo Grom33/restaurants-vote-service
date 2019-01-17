@@ -24,4 +24,5 @@ public interface ProfileService {
 
 	void delete(long id);
 
+	User userRegistration(User user);
 }

@@ -17,7 +17,7 @@ public interface RestaurantService {
 
 	List<Restaurant> getAllRestaurantWithDishesByDate(LocalDate now);
 
-	Restaurant addRestaurant(Restaurant restaurant);
+	Restaurant create(Restaurant restaurant);
 
 	Restaurant getById(long id);
 

@@ -8,6 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.AbstractNamedEntity;
 import ru.gromov.resvote.model.Restaurant;
+import ru.gromov.resvote.util.exception.RestaurantAlreadyExist;
 import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 	private static final String ALL_RESTAURANTS = "json/restaurants_all.json";
 	private static final String ALL_RESTAURANTS_WITH_DISHES_TODAY = "json/restaurants_all.json";
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
+	private static final String RESTAURANT_ID_1_TO = "json/restaurant_id_1_to.json";
 
 
 	@Autowired
@@ -66,12 +68,20 @@ public class RestaurantServiceImplTest extends AbstractTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@Test
-	public void addRestaurant() {
+	public void createRestaurant() {
 		final long newId = 100000;
 		Restaurant newRestaurant = new Restaurant();
 		newRestaurant.setName("Test");
-		Restaurant restaurant = restaurantService.addRestaurant(newRestaurant);
+		Restaurant restaurant = restaurantService.create(newRestaurant);
 		assertEquals((long) restaurant.getId(), newId);
+	}
+
+	@WithMockUser(roles = {"ADMIN"})
+	@SneakyThrows
+	@Test(expected = RestaurantAlreadyExist.class)
+	public void createExistRestaurant() {
+		final Restaurant restaurantTo = objectMapper.readValue(util.getTestFile(RESTAURANT_ID_1_TO), Restaurant.class);
+		restaurantService.create(restaurantTo);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

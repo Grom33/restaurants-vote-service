@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.repository.RestaurantRepository;
+import ru.gromov.resvote.util.exception.RestaurantAlreadyExist;
 import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
 
 import java.time.LocalDate;
@@ -56,11 +57,15 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public Restaurant addRestaurant(final Restaurant restaurant) {
+	public Restaurant create(final Restaurant restaurant) {
 		log.info("Add restaurant: {}", restaurant);
+		if (restaurantRepository.findByName(restaurant.getName()).isPresent()) {
+			throw new RestaurantAlreadyExist(
+					String.format("Restaurant with name: %s already exist!", restaurant.getName())
+			);
+		}
 		return restaurantRepository.save(restaurant);
 	}
-
 
 	@Transactional(readOnly = true)
 	@Override

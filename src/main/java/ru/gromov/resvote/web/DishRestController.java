@@ -47,8 +47,8 @@ public class DishRestController {
 
 	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<Dish> addDishes(@PathVariable final String restaurantId,
-	                            @RequestBody final List<DishTo> dishes) {
+	public List<Dish> create(@PathVariable final String restaurantId,
+	                         @RequestBody final List<DishTo> dishes) {
 		log.info("POST request: add dishes to restaurant, id: {}, dishes count: {}", restaurantId, dishes.size());
 		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
 

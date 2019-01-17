@@ -27,6 +27,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	private static final String NEW_RESTAURANT = "json/new_restaurant.json";
 	private static final String ALL_RESTAURANTS_WITH_DISHES_20190103 = "json/restaurants_all_20190103.json";
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
+	private static final String RESTAURANT_ID_1_TO = "json/restaurant_id_1_to.json";
 	private static final String EDITED_RESTAURANT_ID_1 = "json/edited_restaurant_id_1.json";
 
 	@Autowired
@@ -45,7 +46,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
-	public void addRestaurant() {
+	public void createRestaurant() {
 		final int newUserCount = 6;
 		String json = util.getJsonString(util.getTestFile(NEW_RESTAURANT).toPath());
 		ResultActions action = mockMvc.perform(post(REST_URL + "restaurants")
@@ -55,7 +56,17 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 		Restaurant restaurant = objectMapper.readValue(getContent(action), Restaurant.class);
 		assertFalse(restaurant.isNew());
 		assertEquals(restaurantService.getAll().size(), newUserCount);
+	}
 
+	@WithMockUser(roles = {"ADMIN"})
+	@SneakyThrows
+	@Test
+	public void tryToCreateExistRestaurant() {
+		String json = util.getJsonString(util.getTestFile(RESTAURANT_ID_1_TO).toPath());
+		mockMvc.perform(post(REST_URL + "restaurants")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isConflict());
 	}
 
 	@SneakyThrows

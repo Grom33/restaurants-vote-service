@@ -46,12 +46,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_1_3
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.authorizeRequests()
-				.antMatchers(HttpMethod.GET,"/api/**").permitAll()
-				//.antMatchers("/api/**").authenticated()
-				.antMatchers("**/users/**").hasAnyRole("ADMIN","USER")
-				.antMatchers("**/admin/users/**").hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/**").permitAll()
+				.antMatchers(HttpMethod.POST,"/**/registration").permitAll()
+				.antMatchers("/**/users/**").hasAnyRole("ADMIN", "USER")
+				.antMatchers("/**/admin/**").hasRole("ADMIN")
 				.anyRequest().authenticated().and()
-				//.antMatchers("/api/**").authenticated().and()
 				.httpBasic();
 	}
 }

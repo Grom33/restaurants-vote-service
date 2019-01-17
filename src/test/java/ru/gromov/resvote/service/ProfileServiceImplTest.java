@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.util.exception.UserAlreadyExistException;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
 	private static final String USERS_LIST = "json/users_list.json";
 	private static final String NEW_USER = "json/new_user.json";
+	private static final String EDITED_USER = "json/edited_user.json";
 
 	@Autowired
 	private ProfileService profileService;
@@ -63,6 +65,14 @@ public class ProfileServiceImplTest extends AbstractTest {
 		assertTrue(user.isNew());
 		User newUser = profileService.create(user);
 		assertFalse(newUser.isNew());
+	}
+
+	@WithMockUser(roles = {"ADMIN"})
+	@SneakyThrows
+	@Test(expected = UserAlreadyExistException.class)
+	public void createUserExist() {
+		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
+		profileService.create(user);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

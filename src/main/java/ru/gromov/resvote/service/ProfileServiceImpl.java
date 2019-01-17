@@ -10,12 +10,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.gromov.resvote.model.Role;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
 import ru.gromov.resvote.security.SecurityService;
+import ru.gromov.resvote.util.exception.UserAlreadyExistException;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
-import java.util.List;
+import java.util.*;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -71,6 +73,7 @@ public class ProfileServiceImpl implements ProfileService {
 	public User create(final User user) {
 		log.info("Create user: {}", user);
 		Assert.notNull(user, "user must not be null");
+		checkAlreadyExist(user);
 		if (user.getPassword() != null) user.setPassword(
 				bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
@@ -107,6 +110,24 @@ public class ProfileServiceImpl implements ProfileService {
 	public void delete(final long id) {
 		log.info("Delete user by id: {}", id);
 		userRepository.deleteById(id);
+	}
+
+	@CacheEvict(value = "user", allEntries = true)
+	@Transactional
+	@Override
+	public User userRegistration(User user) {
+		log.info("New user registration: {}", user);
+		checkAlreadyExist(user);
+		Set<Role> roleList = new HashSet<>();
+		roleList.add(Role.ROLE_USER);
+		user.setRoles(roleList);
+		return userRepository.save(user);
+	}
+
+	private void checkAlreadyExist(User user) {
+		if (userRepository.findByEmail(user.getEmail()).isPresent())
+			throw new UserAlreadyExistException(
+					String.format("User with email: %s already exist!", user.getEmail()));
 	}
 
 }

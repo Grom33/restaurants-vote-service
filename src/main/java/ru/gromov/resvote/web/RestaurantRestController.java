@@ -33,8 +33,8 @@ public class RestaurantRestController {
 
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<RestaurantTo> getAllRestaurants(@RequestParam(value = "page", required = false) final Integer page,
-	                                            @RequestParam(value = "size", required = false) final Integer size) {
+	public List<RestaurantTo> getAll(@RequestParam(value = "page", required = false) final Integer page,
+	                                 @RequestParam(value = "size", required = false) final Integer size) {
 		log.info("GET request: Get list of restaurants");
 		if (page == null && size == null) {
 
@@ -46,13 +46,13 @@ public class RestaurantRestController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public RestaurantTo addRestaurant(@RequestBody final RestaurantTo restaurant) {
+	public RestaurantTo create(@RequestBody final RestaurantTo restaurant) {
 		log.info("POST request: Add restaurant: {}", restaurant);
-		return createToFromEntity(restaurantService.addRestaurant(createNewFromTo(restaurant)));
+		return createToFromEntity(restaurantService.create(createNewFromTo(restaurant)));
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public RestaurantTo getRestaurant(@PathVariable final String id) {
+	public RestaurantTo get(@PathVariable final String id) {
 		log.info("GET request: get restaurant by id: {}", id);
 		return createToFromEntity(restaurantService.getById(Long.valueOf(id)));
 	}
@@ -68,7 +68,7 @@ public class RestaurantRestController {
 	}
 
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant> getRestaurantWithDishesByDate(
+	public List<Restaurant> getWithDishesByDate(
 			@RequestParam(value = "date", required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 			@RequestParam(value = "page", required = false) final Integer page,

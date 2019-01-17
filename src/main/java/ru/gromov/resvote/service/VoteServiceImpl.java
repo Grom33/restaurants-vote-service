@@ -56,7 +56,6 @@ public class VoteServiceImpl implements VoteService {
 			Vote oldVote = optionalVote.get();
 			voteRepository.deleteById(oldVote.getId());
 		}
-		//voteRepository.deleteByUser_IdAndDate(id, LocalDate.now());
 	}
 
 	@Secured({"ROLE_ADMIN", "ROLE_USER"})

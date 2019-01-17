@@ -38,4 +38,11 @@ public class UserRestController {
 		profileService.updateLoggedUser(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> userRegistration(@RequestBody final UserTo user) {
+		log.info("POST request: new user registration");
+		profileService.userRegistration(UserUtil.getUserFromTo(user));
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
 }

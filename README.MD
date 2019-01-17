@@ -1,3 +1,4 @@
+
 [![Build Status](https://travis-ci.org/Grom33/restaurants-vote-service.svg?branch=master)](https://travis-ci.org/Grom33/restaurants-vote-service)
 [![codecov](https://codecov.io/gh/Grom33/restaurants-vote-service/branch/master/graph/badge.svg)](https://codecov.io/gh/Grom33/restaurants-vote-service)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8f850660161e439eba36748c2aadc531)](https://www.codacy.com/app/Grom33/restaurants-vote-service?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Grom33/restaurants-vote-service&amp;utm_campaign=Badge_Grade)
@@ -123,9 +124,13 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
 
 > curl -s 'http://localhost:8787/api/v1/admin/users' --user admin@mail.ru:password
 
-20.Create user
+20.Create user by admin
 
 > curl -s -X POST -d '{"name": "TEST USER","email": "test@mail.ru","password": "password", "roles": [ "ROLE_USER" ]}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/admin/users --user admin@mail.ru:password
+
+20.1 New user registration by anonymous
+
+> curl -s -X POST -d '{"name": "mike","email": "mike@mail.ru","password": "password"}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8787/api/v1/users/registration
 
 21.Update user with ID #2
 

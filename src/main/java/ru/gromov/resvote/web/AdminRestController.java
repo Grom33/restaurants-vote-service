@@ -34,7 +34,7 @@ public class AdminRestController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public User create(@RequestBody final User user) {
+	public User createUser(@RequestBody final User user) {
 		log.info("POST request: create user:{}", user);
 		return userService.create(user);
 	}
@@ -46,14 +46,14 @@ public class AdminRestController {
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@RequestBody final UserTo user) {
+	public ResponseEntity<?> updateUser(@RequestBody final UserTo user) {
 		log.info("PUT request: update user: {}", user);
 		userService.update(UserUtil.getUserFromTo(user));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable final String id) {
+	public ResponseEntity<?> deleteUser(@PathVariable final String id) {
 		log.info("DELETE request: delete user by id: {}", id);
 		userService.delete(Long.valueOf(id));
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
