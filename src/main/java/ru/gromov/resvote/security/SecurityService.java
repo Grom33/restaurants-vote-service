@@ -5,7 +5,9 @@ package ru.gromov.resvote.security;
  */
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SecurityService {
@@ -21,6 +24,7 @@ public class SecurityService {
 	private final UserRepository userRepository;
 
 	private UserDetails getLoggedUserDetails() {
+		log.info("GEt USerDetails logged user");
 		Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (userDetails instanceof UserDetails) {
@@ -32,7 +36,9 @@ public class SecurityService {
 		return null;
 	}
 
+	@Cacheable("user")
 	public User getLoggedUser() {
+		log.info("GEt logged user  by email");
 		String userName = getLoggedUserDetails().getUsername();
 		return userRepository.findByEmail(userName)
 				.orElseThrow(() -> new UserNotFoundException(
