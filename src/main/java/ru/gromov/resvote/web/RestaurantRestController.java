@@ -68,12 +68,12 @@ public class RestaurantRestController {
 	}
 
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant> getWithDishesByDate(
+	public List<Restaurant> getAllWithDishesByDate(
 			@RequestParam(value = "date", required = false)
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 			@RequestParam(value = "page", required = false) final Integer page,
 			@RequestParam(value = "size", required = false) final Integer size) {
-		log.info("GET request: get restaurant with dishes by date: {}", date);
+		log.info("GET request: get list of restaurants with dishes by date: {}", date);
 
 		LocalDate useDate = date;
 		if (useDate == null) useDate = LocalDate.now();
@@ -82,7 +82,16 @@ public class RestaurantRestController {
 		} else {
 			return restaurantService.getAllRestaurantWithDishesByDatePaginated(useDate, page, size);
 		}
+	}
 
+	@GetMapping(value = "/{id}/detail", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Restaurant getWithDishesByDate(@PathVariable final String id,
+	                                      @RequestParam(value = "date", required = false)
+	                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+		log.info("GET request: get restaurant with dishes by date: {}", date);
+		LocalDate useDate = date;
+		if (useDate == null) useDate = LocalDate.now();
+		return restaurantService.getRestaurantWithDishesByDate(Long.valueOf(id), useDate);
 	}
 
 	@DeleteMapping(value = "/{id}")

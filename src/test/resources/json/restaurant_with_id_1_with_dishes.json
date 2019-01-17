@@ -1,0 +1,24 @@
+{
+  "id": 1,
+  "name": "Interim",
+  "dishes": [
+    {
+      "id": 5,
+      "name": "Migas Manchegas",
+      "date": "2019-01-04",
+      "price": 9.5
+    },
+    {
+      "id": 4,
+      "name": "Lomo de Bellota Ibérico",
+      "date": "2019-01-04",
+      "price": 13.9
+    },
+    {
+      "id": 6,
+      "name": "Chorizo de Pincho al Infierno",
+      "date": "2019-01-04",
+      "price": 17.5
+    }
+  ]
+}

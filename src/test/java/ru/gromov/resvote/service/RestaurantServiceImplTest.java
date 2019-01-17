@@ -24,8 +24,9 @@ import static org.junit.Assert.*;
 public class RestaurantServiceImplTest extends AbstractTest {
 
 	private static final String ALL_RESTAURANTS = "json/restaurants_all.json";
-	private static final String ALL_RESTAURANTS_WITH_DISHES_TODAY = "json/restaurants_all.json";
+	private static final String ALL_RESTAURANTS_WITH_DISHES = "json/restaurants_all.json";
 	private static final String RESTAURANT_ID_1 = "json/restaurant_id_1.json";
+	private static final String RESTAURANT_ID_1_WITH_DISHES = "json/restaurant_with_id_1_with_dishes.json";
 	private static final String RESTAURANT_ID_1_TO = "json/restaurant_id_1_to.json";
 
 
@@ -33,7 +34,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 	private RestaurantService restaurantService;
 
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAll() {
@@ -43,7 +44,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		assertThat(restaurantService.getAll()).isEqualTo(restaurants);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAllPaginated() {
@@ -53,16 +54,15 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		assertEquals(restaurantService.getAllPaginated(page, size).size(), countOfList);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAllRestaurantWithDishesByDate() {
 		final List<Restaurant> restaurants = objectMapper.readValue(
-				util.getTestFile(ALL_RESTAURANTS_WITH_DISHES_TODAY), new TypeReference<List<Restaurant>>() {
+				util.getTestFile(ALL_RESTAURANTS_WITH_DISHES), new TypeReference<List<Restaurant>>() {
 				});
 		restaurants.sort(Comparator.comparing(AbstractNamedEntity::getName));
-
-		assertThat(restaurantService.getAllRestaurantWithDishesByDate(LocalDate.now()))
+		assertThat(restaurantService.getAllRestaurantWithDishesByDate(LocalDate.of(2019, 1, 4)))
 				.isEqualTo(restaurants);
 	}
 
@@ -84,7 +84,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		restaurantService.create(restaurantTo);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getById() {
@@ -92,7 +92,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		assertEquals(restaurantService.getById(restaurantId1.getId()), restaurantId1);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test(expected = RestaurantNotFoundException.class)
 	public void getByWrongId() {
@@ -120,7 +120,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		restaurantService.getById(deletedId);
 	}
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getAllRestaurantWithDishesByDatePaginated() {
@@ -130,5 +130,19 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		assertEquals(
 				restaurantService.getAllRestaurantWithDishesByDatePaginated(LocalDate.now(), page, size).size(),
 				countOfList);
+	}
+
+	@WithMockUser
+	@SneakyThrows
+	@Test
+	public void getRestaurantWithDishesByDate() {
+
+		final long restaurantId = 1;
+		final Restaurant restaurantId1 = objectMapper.readValue(
+				util.getTestFile(RESTAURANT_ID_1_WITH_DISHES), Restaurant.class);
+		assertEquals(
+				restaurantService.getRestaurantWithDishesByDate(
+						restaurantId, LocalDate.of(2019, 1, 4)).getDishes(),
+				restaurantId1.getDishes());
 	}
 }

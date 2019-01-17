@@ -1,4 +1,8 @@
 spring:
+  cache:
+    jcache:
+      provider: org.ehcache.jsr107.EhcacheCachingProvider
+      config: classpath:ehcache.xml
   datasource:
     url: "jdbc:h2:mem:test"
     username: "sa"
@@ -17,9 +21,9 @@ spring:
       hibernate:
         cache:
           use_second_level_cache: true
-          use_query_cache: true
+          use_query_cache: false
           region:
-            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
         format_sql: true
 server:
   port: 8787

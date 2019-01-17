@@ -3,6 +3,7 @@ package ru.gromov.resvote.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 
 @Slf4j
+@CacheConfig(cacheNames = {"restaurant", "restaurant_with_dishes"})
 @Service
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
@@ -51,6 +53,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public List<Restaurant> getAllRestaurantWithDishesByDate(final LocalDate date) {
 		log.info("Get list of restaurants with dishes by date: {}", date);
 		return restaurantRepository.getAllRestaurantWithDishesByDate(date);
+	}
+
+	@Cacheable("restaurant_with_dishes")
+	@Override
+	public Restaurant getRestaurantWithDishesByDate(long id, LocalDate date) {
+		return restaurantRepository.getRestaurantWithDishesByDate(id, date)
+				.orElseThrow(() -> new RestaurantNotFoundException(
+						String.format("Restaurant with id %s not found", id)));
 	}
 
 	@CacheEvict(value = {"restaurant", "restaurant_with_dishes"}, allEntries = true)

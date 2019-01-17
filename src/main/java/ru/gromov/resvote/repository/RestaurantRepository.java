@@ -25,5 +25,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	@Query("SELECT DISTINCT r FROM Restaurant r JOIN r.dishes d WHERE d.date =:date ORDER BY r.name")
 	Page<Restaurant> getAllRestaurantWithDishesByDatePaginated(@Param("date") LocalDate date, Pageable pageable);
 
+	@Query("SELECT r FROM Restaurant r JOIN FETCH r.dishes d WHERE d.date =:date and r.id=:id")
+	Optional<Restaurant> getRestaurantWithDishesByDate(@Param("id") long id, @Param("date") LocalDate date);
+
 	Optional<Restaurant> findByName(String name);
 }

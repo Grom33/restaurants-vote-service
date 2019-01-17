@@ -15,7 +15,9 @@ public interface RestaurantService {
 
 	List<Restaurant> getAllPaginated(int page, int size);
 
-	List<Restaurant> getAllRestaurantWithDishesByDate(LocalDate now);
+	List<Restaurant> getAllRestaurantWithDishesByDate(LocalDate date);
+
+	Restaurant getRestaurantWithDishesByDate(long id, LocalDate date);
 
 	Restaurant create(Restaurant restaurant);
 
