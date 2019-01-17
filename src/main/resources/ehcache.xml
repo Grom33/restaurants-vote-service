@@ -9,14 +9,14 @@
 
     <cache-template name="restaurantsCache">
         <expiry>
-            <tti unit="minutes">15</tti>
+            <tti unit="minutes">120</tti>
         </expiry>
         <heap>10000</heap>
     </cache-template>
 
     <cache-template name="userCache">
         <expiry>
-            <ttl unit="minutes">30</ttl>
+            <tti unit="minutes">30</tti>
         </expiry>
         <heap>5000</heap>
     </cache-template>
