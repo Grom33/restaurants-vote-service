@@ -62,10 +62,10 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isOk());
 	}
 
-	@WithMockUser(value = "ivan@mail.ru")
+	@WithMockUser(value = "petr@mail.ru")
 	@SneakyThrows
 	@Test
-	public void makeVoteAfterDeadline() {
+	public void changeVoteAfterDeadline() {
 		final int restaurantId = 1;
 		setDeadlineTime(voteService, LocalTime.now().minusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))

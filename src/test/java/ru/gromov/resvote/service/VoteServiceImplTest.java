@@ -28,12 +28,12 @@ public class VoteServiceImplTest extends AbstractTest {
 	private VoteService voteService;
 
 
-	@WithMockUser(roles = {"ADMIN"})
+	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void getRestaurantVote() {
 		final long restaurantId = 1L;
-		final int expectedCount = 2;
+		final int expectedCount = 1;
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
 	}
 
@@ -53,7 +53,7 @@ public class VoteServiceImplTest extends AbstractTest {
 	@Test
 	public void makeVote() {
 		final long restaurantId = 1L;
-		final int expectedCount = 3;
+		final int expectedCount = 2;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
@@ -64,13 +64,13 @@ public class VoteServiceImplTest extends AbstractTest {
 	@Test
 	public void makeVoteByUserManyTimes() {
 		final long restaurantId = 1L;
-		final int expectedCount = 2;
+		final int expectedCount = 1;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		voteService.makeVote(restaurantId, LocalTime.now());
 		voteService.makeVote(restaurantId, LocalTime.now());
-		assertEquals(voteService.getRestaurantVote(restaurantId, LocalDate.now()).size(), expectedCount);
+		assertEquals(expectedCount, voteService.getRestaurantVote(restaurantId, LocalDate.now()).size());
 	}
 
 	@WithMockUser(value = "ivan@mail.ru")
