@@ -1,6 +1,7 @@
 package ru.gromov.resvote.service;
 
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
+import ru.gromov.resvote.to.VoterTo;
 
 
 import java.time.LocalDate;
@@ -20,5 +21,7 @@ public interface VoteService {
 	List<RestaurantWithVoteTo> getVotedRestaurants(LocalDate date);
 
 	List<RestaurantWithVoteTo> getVotedRestaurantsPaginated(LocalDate date, int page, int size);
+
+	List<VoterTo> findAllVotersByRestaurantAndDate(long id, LocalDate date);
 }
 

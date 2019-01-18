@@ -3,7 +3,6 @@ package ru.gromov.resvote.web.security;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -36,7 +35,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	}
 
 	private void getAllUsers() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		mockMvc.perform(get(REST_URL + "admin/users"));
 	}
 
@@ -56,7 +55,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	}
 
 	private void createUser() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 
 		String json = util.getJsonString(util.getTestFile(NEW_USER).toPath());
 		mockMvc.perform(post(REST_URL + "admin/users")
@@ -79,7 +78,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	}
 
 	private void getUser() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int userId = 2;
 		mockMvc.perform(get(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isOk());
@@ -100,7 +99,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	}
 
 	private void updateUser() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		String json = util.getJsonString(util.getTestFile(EDITED_USER).toPath());
 		mockMvc.perform(put(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -112,7 +111,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	@SneakyThrows
 	@Test
 	public void deleteUserByUser() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());
@@ -122,7 +121,7 @@ public class AdminRestControllerSecurityTest extends AbstractSecurityControllerT
 	@SneakyThrows
 	@Test
 	public void deleteUserByAnonymous() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());

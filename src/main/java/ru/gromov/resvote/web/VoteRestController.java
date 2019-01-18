@@ -11,7 +11,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.gromov.resvote.repository.VoteRepository;
 import ru.gromov.resvote.service.VoteService;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.to.VoterTo;
@@ -29,8 +28,6 @@ public class VoteRestController {
 	@Autowired
 	private final VoteService voteService;
 
-	@Autowired final VoteRepository voteRepository;
-
 	@GetMapping(value = "/{id}/vote")
 	public List<VoterTo> getListVoteOfRestaurant(@PathVariable final String id,
 	                                             @RequestParam(value = "date", required = false)
@@ -38,7 +35,7 @@ public class VoteRestController {
 		log.info("GET request: get list of vote by restaurant id: {}, and date {}", id, date);
 		LocalDate useDate = date;
 		if (useDate == null) useDate = LocalDate.now();
-		return voteRepository.findAllVotersByRestaurantAndDate(Long.valueOf(id), useDate);
+		return voteService.findAllVotersByRestaurantAndDate(Long.valueOf(id), useDate);
 	}
 
 	@DeleteMapping(value = "/vote")

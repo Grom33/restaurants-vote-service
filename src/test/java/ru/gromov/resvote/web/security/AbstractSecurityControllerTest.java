@@ -13,7 +13,7 @@ public abstract class AbstractSecurityControllerTest extends AbstractRestControl
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 
-	protected void expectedNestedException(Class clazz) {
-		expectedException.expectCause(isA(clazz));
+	protected void expectedNestedException() {
+		expectedException.expectCause(isA((Class) org.springframework.security.access.AccessDeniedException.class));
 	}
 }

@@ -3,7 +3,6 @@ package ru.gromov.resvote.web.security;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 
@@ -35,7 +34,7 @@ public class DishRestControllerSecurityTest extends AbstractSecurityControllerTe
 	}
 
 	private void addDish() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int restaurantID = 1;
 		String json = util.getJsonString(util.getTestFile(NEW_DISHES).toPath());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantID + "/dishes")
@@ -59,7 +58,7 @@ public class DishRestControllerSecurityTest extends AbstractSecurityControllerTe
 	}
 
 	private void updateDish() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int dishId = 1;
 		String json = util.getJsonString(util.getTestFile(EDITED_DISH).toPath());
 		mockMvc.perform(put(REST_URL + "restaurants/dishes/" + dishId)
@@ -84,7 +83,7 @@ public class DishRestControllerSecurityTest extends AbstractSecurityControllerTe
 	}
 
 	private void deleteDish() throws Exception {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int dishId = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/dishes/" + dishId))
 				.andExpect(status().isNoContent());

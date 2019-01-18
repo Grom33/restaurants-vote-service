@@ -39,9 +39,8 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void getRestaurantVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 1;
-		assertEquals(
-				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size(),
-				expectedCount);
+		assertEquals(expectedCount,
+				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}
 
 	@WithUserDetails("petr@mail.ru")
@@ -51,8 +50,8 @@ public class VoteServiceImplTest extends AbstractTest {
 		final long restaurantId = 3L;
 		final int expectedCount = 1;
 		voteService.deleteCurrentVoteOfUser();
-		assertEquals(voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size(),
-				expectedCount);
+		assertEquals(expectedCount,
+				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}
 
 
@@ -64,8 +63,8 @@ public class VoteServiceImplTest extends AbstractTest {
 		final int expectedCount = 2;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
 		voteService.makeVote(restaurantId, LocalTime.now());
-		assertEquals(voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size(),
-				expectedCount);
+		assertEquals(expectedCount,
+				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}
 
 	@WithUserDetails("petr@mail.ru")
@@ -112,8 +111,7 @@ public class VoteServiceImplTest extends AbstractTest {
 		final int page = 0;
 		final int size = 3;
 		final int countOfList = 3;
-		assertEquals(
-				voteService.getVotedRestaurantsPaginated(LocalDate.now(), page, size).size(),
-				countOfList);
+		assertEquals(countOfList,
+				voteService.getVotedRestaurantsPaginated(LocalDate.now(), page, size).size());
 	}
 }

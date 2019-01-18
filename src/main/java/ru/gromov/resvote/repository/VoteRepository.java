@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.to.VoterTo;
@@ -22,7 +21,6 @@ import java.util.Optional;
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
-	@Transactional(readOnly = true)
 	@Query("SELECT new ru.gromov.resvote.to.VoterTo(u.id, u.name) " +
 			"FROM Vote v JOIN FETCH ru.gromov.resvote.model.User u ON u.id = v.userId " +
 			"WHERE v.date =:date AND v.restaurantId =:id ORDER BY u.name")

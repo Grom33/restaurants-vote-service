@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import ru.gromov.resvote.model.User;
@@ -29,7 +28,7 @@ public class UserRestControllerSecurityTest extends AbstractSecurityControllerTe
 	@SneakyThrows
 	@Test
 	public void getLoggedUserByAnonymous() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		mockMvc.perform(get(REST_URL + "users"))
 				.andExpect(status().isOk());
 	}
@@ -38,25 +37,22 @@ public class UserRestControllerSecurityTest extends AbstractSecurityControllerTe
 	@SneakyThrows
 	@Test
 	public void updateLoggedUserByAnonymous() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		String json = util.getJsonString(util.getTestFile(EDITED_USER).toPath());
 		mockMvc.perform(put(REST_URL + "users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().is5xxServerError());
 	}
 
 	@WithUserDetails("petr@mail.ru")
 	@SneakyThrows
 	@Test
 	public void updateUserProfileByAnotherUser() {
-		expectedNestedException(AccessDeniedException.class);
 		String json = util.getJsonString(util.getTestFile(EDITED_USER).toPath());
 		mockMvc.perform(put(REST_URL + "users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
-		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		assertEquals(profileService.getLoggedUser().getName(), user.getName());
+				.andExpect(status().isConflict());
 	}
 }

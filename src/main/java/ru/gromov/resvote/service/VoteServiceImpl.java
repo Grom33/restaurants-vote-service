@@ -16,6 +16,7 @@ import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.repository.VoteRepository;
 import ru.gromov.resvote.security.AuthorizedUser;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
+import ru.gromov.resvote.to.VoterTo;
 import ru.gromov.resvote.util.exception.DeadLineException;
 
 import java.time.LocalDate;
@@ -83,6 +84,13 @@ public class VoteServiceImpl implements VoteService {
 	public List<RestaurantWithVoteTo> getVotedRestaurantsPaginated(final LocalDate date, int page, int size) {
 		log.info("Get paginated list of vote result for date: {}, page: {}, size: {}", date, page, size);
 		return voteRepository.getVotedRestaurantsPaginated(date, PageRequest.of(page, size)).getContent();
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<VoterTo> findAllVotersByRestaurantAndDate(final long id, final LocalDate date) {
+		log.info("Get list voters of restaurant id:{} for date: {}",id,  date);
+		return voteRepository.findAllVotersByRestaurantAndDate(id, date);
 	}
 
 

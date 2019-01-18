@@ -8,7 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.service.ProfileService;
-import ru.gromov.resvote.util.exception.UserNotFoundException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -55,7 +55,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isOk());
 		User user = objectMapper.readValue(getContent(action), User.class);
 		assertFalse(user.isNew());
-		assertEquals(profileService.getAll().size(), newUserCount);
+		assertEquals(newUserCount, profileService.getAll().size());
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -80,12 +80,12 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 				.content(json))
 				.andExpect(status().isOk());
 		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		assertEquals(profileService.getById(user.getId()), user);
+		assertEquals(user, profileService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = UserNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void deleteUser() {
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))

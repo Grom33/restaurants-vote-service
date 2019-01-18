@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.service.DishService;
-import ru.gromov.resvote.util.exception.DishNotFoundException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 
@@ -85,7 +85,7 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = DishNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void deleteDish() {
 		final int dishId = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/dishes/" + dishId))

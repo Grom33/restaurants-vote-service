@@ -16,8 +16,8 @@ import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
 import ru.gromov.resvote.security.AuthorizedUser;
 import ru.gromov.resvote.to.UserTo;
-import ru.gromov.resvote.util.exception.UserAlreadyExistException;
-import ru.gromov.resvote.util.exception.UserNotFoundException;
+import ru.gromov.resvote.util.exception.AlreadyExistException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.util.*;
 
@@ -50,8 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
 		log.info("Update logged user");
 		final UserTo loggedUser = AuthorizedUser.get().getUserTo();
 		if (!((Long) loggedUser.getId()).equals(user.getId())) {
-			log.info("User {}, try edit another user profile: {}", loggedUser, user);
-			throw new AccessDeniedException("This action is prohibited!");
+			log.warn("User {}, try edit another user profile: {}", loggedUser, user);
+			throw new IllegalArgumentException("This action is prohibited!");
 		}
 		User updatedUser = getById(loggedUser.getId());
 		updatedUser.setName(user.getName());
@@ -86,7 +86,7 @@ public class ProfileServiceImpl implements ProfileService {
 	public User getById(final long id) {
 		log.info("Get user by id: {}", id);
 		return userRepository.findById(id)
-				.orElseThrow(() -> new UserNotFoundException(
+				.orElseThrow(() -> new NotFoundException(
 						String.format("User with id %s not found", id)));
 	}
 
@@ -126,7 +126,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 	private void checkAlreadyExist(User user) {
 		if (userRepository.findByEmail(user.getEmail()).isPresent())
-			throw new UserAlreadyExistException(
+			throw new AlreadyExistException(
 					String.format("User with email: %s already exist!", user.getEmail()));
 	}
 

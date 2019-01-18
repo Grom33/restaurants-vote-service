@@ -3,7 +3,6 @@ package ru.gromov.resvote.web.security;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import ru.gromov.resvote.service.VoteService;
 
@@ -26,7 +25,7 @@ public class VoteRestControllerSecurityTest extends AbstractSecurityControllerTe
 	@SneakyThrows
 	@Test
 	public void deleteVoteByAnonymous() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		mockMvc.perform(delete(REST_URL + "restaurants/vote"))
 				.andExpect(status().isNoContent());
 	}
@@ -35,7 +34,7 @@ public class VoteRestControllerSecurityTest extends AbstractSecurityControllerTe
 	@SneakyThrows
 	@Test
 	public void makeVoteByAnonymous() {
-		expectedNestedException(AccessDeniedException.class);
+		expectedNestedException();
 		final int restaurantId = 1;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))

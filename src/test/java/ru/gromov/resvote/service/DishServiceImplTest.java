@@ -8,7 +8,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
-import ru.gromov.resvote.util.exception.DishNotFoundException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,11 +41,11 @@ public class DishServiceImplTest extends AbstractTest {
 	@SneakyThrows
 	public void getById() {
 		final Dish dish = objectMapper.readValue(util.getTestFile(DISH_ID_1), Dish.class);
-		assertEquals(dishService.getById(dish.getId()), dish);
+		assertEquals(dish, dishService.getById(dish.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
-	@Test(expected = DishNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	@SneakyThrows
 	public void getByIdWrongId() {
 		final int wrongId = 999;
@@ -69,12 +69,12 @@ public class DishServiceImplTest extends AbstractTest {
 	public void update() {
 		final Dish dish = objectMapper.readValue(util.getTestFile(EDITED_DISH), Dish.class);
 		dishService.update(dish);
-		assertEquals(dishService.getById(dish.getId()), dish);
+		assertEquals(dish, dishService.getById(dish.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = DishNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void delete() {
 		final long dishToDelete = 9L;
 		dishService.delete(dishToDelete);
@@ -98,6 +98,7 @@ public class DishServiceImplTest extends AbstractTest {
 						dish.getName(), dish.getPrice(), restaurant, LocalDate.now()
 				)).collect(Collectors.toList());
 		dishService.createAll(dishList);
-		assertEquals(dishesCountAfterCreate, dishesCountAfterCreate);
+		assertEquals(dishesCountAfterCreate,
+				dishService.getByRestaurantId(restaurantId, LocalDate.now()).size());
 	}
 }

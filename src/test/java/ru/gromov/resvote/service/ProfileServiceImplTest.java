@@ -9,8 +9,8 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.to.UserTo;
-import ru.gromov.resvote.util.exception.UserAlreadyExistException;
-import ru.gromov.resvote.util.exception.UserNotFoundException;
+import ru.gromov.resvote.util.exception.AlreadyExistException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = UserAlreadyExistException.class)
+	@Test(expected = AlreadyExistException.class)
 	public void createUserExist() {
 		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
 		profileService.create(user);
@@ -72,12 +72,12 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Test
 	public void getById() {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
-		assertEquals(profileService.getById(user.getId()), user);
+		assertEquals(user, profileService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = UserNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void getByWrongId() {
 		final int wrongId = 999;
 		profileService.getById(wrongId);
@@ -90,11 +90,11 @@ public class ProfileServiceImplTest extends AbstractTest {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
 		user.setEmail("new@mail.ru");
 		profileService.update(user);
-		assertEquals(profileService.getById(user.getId()), user);
+		assertEquals(user, profileService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
-	@Test(expected = UserNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void delete() {
 		final long userToDelete = 2L;
 		profileService.delete(userToDelete);

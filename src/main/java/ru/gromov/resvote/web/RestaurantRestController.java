@@ -94,6 +94,7 @@ public class RestaurantRestController {
 		return restaurantService.getRestaurantWithDishesByDate(Long.valueOf(id), useDate);
 	}
 
+
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable final String id) {
 		log.info("DELETE request: delete restaurant by id: {}", id);

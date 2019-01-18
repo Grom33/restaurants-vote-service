@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.repository.RestaurantRepository;
-import ru.gromov.resvote.util.exception.RestaurantAlreadyExist;
-import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
+import ru.gromov.resvote.util.exception.AlreadyExistException;
+import ru.gromov.resvote.util.exception.NotFoundException;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,7 +60,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public Restaurant getRestaurantWithDishesByDate(long id, LocalDate date) {
 		return restaurantRepository.getRestaurantWithDishesByDate(id, date)
-				.orElseThrow(() -> new RestaurantNotFoundException(
+				.orElseThrow(() -> new NotFoundException(
 						String.format("Restaurant with id %s not found", id)));
 	}
 
@@ -70,7 +71,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public Restaurant create(final Restaurant restaurant) {
 		log.info("Add restaurant: {}", restaurant);
 		if (restaurantRepository.findByName(restaurant.getName()).isPresent()) {
-			throw new RestaurantAlreadyExist(
+			throw new AlreadyExistException(
 					String.format("Restaurant with name: %s already exist!", restaurant.getName())
 			);
 		}
@@ -82,7 +83,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public Restaurant getById(final long id) {
 		log.info("Get restaurant with id {}", id);
 		return restaurantRepository.findById(id)
-				.orElseThrow(() -> new RestaurantNotFoundException(
+				.orElseThrow(() -> new NotFoundException(
 						String.format("Restaurant with id %s not found", id)));
 	}
 

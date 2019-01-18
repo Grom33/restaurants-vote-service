@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.repository.DishRepository;
-import ru.gromov.resvote.util.exception.DishNotFoundException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,7 +29,7 @@ public class DishServiceImpl implements DishService {
 	@Override
 	public Dish getById(final long id) {
 		log.info("Get dish by Id: {}", id);
-		return dishRepository.findById(id).orElseThrow(() -> new DishNotFoundException(
+		return dishRepository.findById(id).orElseThrow(() -> new NotFoundException(
 				String.format("Dish with id %s not found!", id)));
 	}
 

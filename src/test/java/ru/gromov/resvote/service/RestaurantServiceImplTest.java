@@ -8,8 +8,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.AbstractNamedEntity;
 import ru.gromov.resvote.model.Restaurant;
-import ru.gromov.resvote.util.exception.RestaurantAlreadyExist;
-import ru.gromov.resvote.util.exception.RestaurantNotFoundException;
+import ru.gromov.resvote.util.exception.AlreadyExistException;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -51,7 +51,7 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		final int page = 0;
 		final int size = 3;
 		final int countOfList = 3;
-		assertEquals(restaurantService.getAllPaginated(page, size).size(), countOfList);
+		assertEquals(countOfList, restaurantService.getAllPaginated(page, size).size());
 	}
 
 	@WithMockUser
@@ -73,12 +73,12 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		Restaurant newRestaurant = new Restaurant();
 		newRestaurant.setName("Test");
 		Restaurant restaurant = restaurantService.create(newRestaurant);
-		assertEquals((long) restaurant.getId(), newId);
+		assertEquals(newId, (long) restaurant.getId());
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = RestaurantAlreadyExist.class)
+	@Test(expected = AlreadyExistException.class)
 	public void createExistRestaurant() {
 		final Restaurant restaurantTo = objectMapper.readValue(util.getTestFile(RESTAURANT_ID_1_TO), Restaurant.class);
 		restaurantService.create(restaurantTo);
@@ -89,12 +89,12 @@ public class RestaurantServiceImplTest extends AbstractTest {
 	@Test
 	public void getById() {
 		final Restaurant restaurantId1 = objectMapper.readValue(util.getTestFile(RESTAURANT_ID_1), Restaurant.class);
-		assertEquals(restaurantService.getById(restaurantId1.getId()), restaurantId1);
+		assertEquals(restaurantId1, restaurantService.getById(restaurantId1.getId()));
 	}
 
 	@WithMockUser
 	@SneakyThrows
-	@Test(expected = RestaurantNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void getByWrongId() {
 		final int wrongId = 999;
 		restaurantService.getById(wrongId);
@@ -107,13 +107,13 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		final Restaurant restaurantId1 = objectMapper.readValue(util.getTestFile(RESTAURANT_ID_1), Restaurant.class);
 		restaurantId1.setName("TEST UPDATED");
 		restaurantService.update(restaurantId1);
-		assertEquals(restaurantService.getById(restaurantId1.getId()), restaurantId1);
+		assertEquals(restaurantId1, restaurantService.getById(restaurantId1.getId()));
 
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = RestaurantNotFoundException.class)
+	@Test(expected = NotFoundException.class)
 	public void delete() {
 		final long deletedId = 1L;
 		restaurantService.delete(deletedId);
@@ -128,8 +128,8 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		final int size = 3;
 		final int countOfList = 3;
 		assertEquals(
-				restaurantService.getAllRestaurantWithDishesByDatePaginated(LocalDate.now(), page, size).size(),
-				countOfList);
+				countOfList,
+				restaurantService.getAllRestaurantWithDishesByDatePaginated(LocalDate.now(), page, size).size());
 	}
 
 	@WithMockUser
@@ -140,9 +140,8 @@ public class RestaurantServiceImplTest extends AbstractTest {
 		final long restaurantId = 1;
 		final Restaurant restaurantId1 = objectMapper.readValue(
 				util.getTestFile(RESTAURANT_ID_1_WITH_DISHES), Restaurant.class);
-		assertEquals(
+		assertEquals(restaurantId1.getDishes(),
 				restaurantService.getRestaurantWithDishesByDate(
-						restaurantId, LocalDate.of(2019, 1, 4)).getDishes(),
-				restaurantId1.getDishes());
+						restaurantId, LocalDate.of(2019, 1, 4)).getDishes());
 	}
 }

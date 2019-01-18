@@ -1,56 +1,83 @@
 package ru.gromov.resvote.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.gromov.resvote.util.exception.AlreadyExistException;
-import ru.gromov.resvote.util.exception.DeadLineException;
-import ru.gromov.resvote.util.exception.NotFoundException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import ru.gromov.resvote.util.exception.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static ru.gromov.resvote.util.exception.ErrorType.*;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
+@ResponseBody
 @Slf4j
-@ControllerAdvice
+@ControllerAdvice(annotations = RestController.class)
 public class RestExceptionHandler {
 
+	//  http://stackoverflow.com/a/22358422/548473
+	@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
 	@ExceptionHandler({NotFoundException.class})
-	public ResponseEntity<Object> handleNotFoundException(final Exception ex) {
-		log.error("404 Status Code {}", ex.getMessage());
-		return new ResponseEntity<>(
-				ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND);
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	public ErrorInfo handleNotFoundException(HttpServletRequest req, Exception ex) {
+		log.error("422 Status Code, Data not found: {}", ex.getMessage());
+		return getErrorInfo(req, ex, DATA_NOT_FOUND);
 	}
 
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler({
+			MethodArgumentTypeMismatchException.class,
+			HttpMessageNotReadableException.class})
+	public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception ex) {
+		log.error("422 Status Code, Data validation error {}", ex.getMessage());
+		return getErrorInfo(req, ex, DATA_ERROR);
+	}
+
+
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@ResponseStatus(value = HttpStatus.CONFLICT)
 	@ExceptionHandler({IllegalArgumentException.class})
-	public ResponseEntity<Object> handleIllegalArgException(final Exception ex) {
+	public ErrorInfo handleIllegalArgException(HttpServletRequest req, Exception ex) {
 		log.error("409 Status Code {}", ex.getMessage());
-		return new ResponseEntity<>(
-				ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+		return getErrorInfo(req, ex, VALIDATION_ERROR);
 	}
 
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	@ExceptionHandler({DeadLineException.class})
-	public ResponseEntity<Object> handleDeadlineException(final Exception ex) {
-		log.error("403 Status Code {}", ex.getMessage());
-		return new ResponseEntity<>(
-				ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN);
+	public ErrorInfo handleDeadlineException(HttpServletRequest req, Exception ex) {
+		log.info("403 Status Code {}", ex.getMessage());
+		return getErrorInfo(req, ex, DEADLINE_ERROR);
 	}
 
-	@ExceptionHandler({ConstraintViolationException.class})
-	public ResponseEntity<Object> handleSQLException(final Exception ex) {
-		log.error("400 Status Code {}", ex.getMessage());
-		return new ResponseEntity<>(
-				ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-	}
-
+	@ResponseStatus(value = HttpStatus.CONFLICT)
+	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@ExceptionHandler({AlreadyExistException.class})
-	public ResponseEntity<Object> handleAlreadyExist(RuntimeException ex) {
+	public ErrorInfo handleAlreadyExist(HttpServletRequest req, RuntimeException ex) {
 		log.error("409 Status Code: {} ", ex.getMessage());
-		return new ResponseEntity<>(
-				ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT);
+		return getErrorInfo(req, ex, VALIDATION_ERROR);
+	}
+
+
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@ResponseStatus(value = HttpStatus.CONFLICT)
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ErrorInfo conflict(HttpServletRequest req, Exception ex) {
+		log.error("409 Status Code: {} ", ex.getMessage());
+		return getErrorInfo(req, ex, DATA_ERROR);
+	}
+
+	private ErrorInfo getErrorInfo(HttpServletRequest req, Exception e, ErrorType errorType) {
+		log.info("req {}, e {}, error:{}", req, e, errorType);
+		return new ErrorInfo(req.getRequestURL(), errorType, e.getMessage());
 	}
 
 }

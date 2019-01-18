@@ -49,7 +49,7 @@ public class UserRestControllerTest extends AbstractRestControllerTest {
 				.content(json))
 				.andExpect(status().isCreated());
 		UserTo user = objectMapper.readValue(util.getTestFile(NEW_USER_TO), UserTo.class);
-		assertEquals(userService.getUserByEmail(user.getEmail()).getEmail(), user.getEmail());
+		assertEquals(user.getEmail(), userService.getUserByEmail(user.getEmail()).getEmail());
 	}
 
 	@SneakyThrows

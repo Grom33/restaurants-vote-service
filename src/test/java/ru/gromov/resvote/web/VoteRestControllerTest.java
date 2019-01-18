@@ -53,7 +53,8 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 		final int expectedCount = 1;
 		mockMvc.perform(delete(REST_URL + "restaurants/vote"))
 				.andExpect(status().isNoContent());
-		assertEquals(voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size(), expectedCount);
+		assertEquals(expectedCount,
+				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 
 	}
 
