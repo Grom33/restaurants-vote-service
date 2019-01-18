@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,10 @@ import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.AlreadyExistException;
 import ru.gromov.resvote.util.exception.NotFoundException;
 
+import javax.validation.constraints.Positive;
 import java.util.*;
+
+import static ru.gromov.resvote.util.ValidationUtil.checkNotFoundWithId;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -45,6 +47,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@CacheEvict(value = "user", allEntries = true)
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
+	@Transactional
 	@Override
 	public void updateLoggedUser(final User user) {
 		log.info("Update logged user");
@@ -83,7 +86,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured("ROLE_ADMIN")
 	@Transactional(readOnly = true)
 	@Override
-	public User getById(final long id) {
+	public User getById(@Positive final long id) {
 		log.info("Get user by id: {}", id);
 		return userRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException(
@@ -107,16 +110,17 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public void delete(final long id) {
+	public void delete(@Positive final long id) {
 		log.info("Delete user by id: {}", id);
-		userRepository.deleteById(id);
+		checkNotFoundWithId(userRepository.delete(id) != 0, id);
 	}
 
 	@CacheEvict(value = "user", allEntries = true)
 	@Transactional
 	@Override
-	public User userRegistration(User user) {
+	public User userRegistration(final User user) {
 		log.info("New user registration: {}", user);
+		Assert.notNull(user, "user must not be null");
 		checkAlreadyExist(user);
 		Set<Role> roleList = new HashSet<>();
 		roleList.add(Role.ROLE_USER);
@@ -124,7 +128,7 @@ public class ProfileServiceImpl implements ProfileService {
 		return userRepository.save(user);
 	}
 
-	private void checkAlreadyExist(User user) {
+	private void checkAlreadyExist(final User user) {
 		if (userRepository.findByEmail(user.getEmail()).isPresent())
 			throw new AlreadyExistException(
 					String.format("User with email: %s already exist!", user.getEmail()));
