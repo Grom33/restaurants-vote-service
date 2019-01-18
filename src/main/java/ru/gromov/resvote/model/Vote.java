@@ -6,8 +6,6 @@ package ru.gromov.resvote.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -32,14 +30,13 @@ public class Vote extends AbstractBaseEntity {
 	private Long restaurantId;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(name = "user_id", nullable = false)
 	@JoinColumn(name = "user_id", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private User user;
+	private long userId;
 
-	public Vote(@NotNull LocalDate date, Long restaurantId, User user) {
+	public Vote(@NotNull LocalDate date, Long restaurantId, long userId) {
 		this.date = date;
 		this.restaurantId = restaurantId;
-		this.user = user;
+		this.userId = userId;
 	}
 }

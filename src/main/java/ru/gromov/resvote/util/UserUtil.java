@@ -15,11 +15,8 @@ public class UserUtil {
 				userTo.getEmail(), userTo.getPassword());
 	}
 
-	public static org.springframework.security.core.userdetails.User getUserDetailsFromUser(User user) {
-		return new org.springframework.security.core.userdetails.User(
-				user.getEmail(),
-				user.getPassword(),
-				user.getRoles()
-		);
+	public static UserTo getTo(User user) {
+		return new UserTo(user.getId(), user.getName(), user.getEmail(), user.getPassword());
 	}
+
 }

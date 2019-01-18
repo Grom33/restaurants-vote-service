@@ -4,6 +4,7 @@ package ru.gromov.resvote.to;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class UserTo implements Serializable {
 	@NotBlank
 	@Size(max = 100)
 	private String email;
-
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@Size(min = 5, max = 32, message = "length must between 5 and 32 characters")
 	private String password;
 

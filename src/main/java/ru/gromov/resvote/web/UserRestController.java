@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
@@ -17,7 +16,7 @@ import ru.gromov.resvote.util.UserUtil;
  */
 
 @Slf4j
-@RequestMapping(value = "api/v1/users")
+@RequestMapping("${settings.api_url.profile}")
 @RestController
 @RequiredArgsConstructor
 public class UserRestController {
@@ -27,7 +26,7 @@ public class UserRestController {
 
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public User getLoggedUser() {
+	public UserTo getLoggedUser() {
 		log.info("GET request: get logged user");
 		return profileService.getLoggedUser();
 	}

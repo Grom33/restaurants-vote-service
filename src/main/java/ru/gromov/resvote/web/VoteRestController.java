@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.gromov.resvote.repository.VoteRepository;
 import ru.gromov.resvote.service.VoteService;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.to.VoterTo;
@@ -18,16 +19,17 @@ import ru.gromov.resvote.to.VoterTo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
-@RequestMapping(value = "api/v1/restaurants")
+@RequestMapping("${settings.api_url.restaurants}")
 @RestController
 @RequiredArgsConstructor
 public class VoteRestController {
 
 	@Autowired
 	private final VoteService voteService;
+
+	@Autowired final VoteRepository voteRepository;
 
 	@GetMapping(value = "/{id}/vote")
 	public List<VoterTo> getListVoteOfRestaurant(@PathVariable final String id,
@@ -36,9 +38,7 @@ public class VoteRestController {
 		log.info("GET request: get list of vote by restaurant id: {}, and date {}", id, date);
 		LocalDate useDate = date;
 		if (useDate == null) useDate = LocalDate.now();
-		return voteService.getRestaurantVote(Long.valueOf(id), useDate).stream()
-				.map(v -> new VoterTo(v.getUser().getId(), v.getUser().getName()))
-				.collect(Collectors.toList());
+		return voteRepository.findAllVotersByRestaurantAndDate(Long.valueOf(id), useDate);
 	}
 
 	@DeleteMapping(value = "/vote")

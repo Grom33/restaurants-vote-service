@@ -8,8 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static ru.gromov.resvote.util.UserUtil.*;
+import ru.gromov.resvote.security.AuthorizedUser;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -27,7 +26,7 @@ public class UserServiceDetailImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
 		log.info("Load user by username: {} ", email);
-		return getUserDetailsFromUser(userService.getUserByEmail(email));
+		return new AuthorizedUser(userService.getUserByEmail(email));
 	}
 
 }

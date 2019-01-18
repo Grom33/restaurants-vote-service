@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.service.ProfileService;
 
@@ -46,7 +46,7 @@ public class UserRestControllerSecurityTest extends AbstractSecurityControllerTe
 				.andExpect(status().isOk());
 	}
 
-	@WithMockUser(value = "petr@mail.ru")
+	@WithUserDetails("petr@mail.ru")
 	@SneakyThrows
 	@Test
 	public void updateUserProfileByAnotherUser() {

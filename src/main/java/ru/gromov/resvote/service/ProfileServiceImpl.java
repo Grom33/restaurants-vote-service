@@ -14,7 +14,8 @@ import org.springframework.util.Assert;
 import ru.gromov.resvote.model.Role;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
-import ru.gromov.resvote.security.SecurityService;
+import ru.gromov.resvote.security.AuthorizedUser;
+import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.UserAlreadyExistException;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
@@ -33,31 +34,29 @@ public class ProfileServiceImpl implements ProfileService {
 	private final UserRepository userRepository;
 
 	@Autowired
-	private final SecurityService securityService;
-
-	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Override
-	public User getLoggedUser() {
+	public UserTo getLoggedUser() {
 		log.info("Get logged user");
-		return securityService.getLoggedUser();
+		return AuthorizedUser.get().getUserTo();
 	}
 
 	@CacheEvict(value = "user", allEntries = true)
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Override
-	public void updateLoggedUser(User user) {
+	public void updateLoggedUser(final User user) {
 		log.info("Update logged user");
-		User loggedUser = securityService.getLoggedUser();
-		if (!loggedUser.getId().equals(user.getId())) {
+		final UserTo loggedUser = AuthorizedUser.get().getUserTo();
+		if (!((Long) loggedUser.getId()).equals(user.getId())) {
 			log.info("User {}, try edit another user profile: {}", loggedUser, user);
 			throw new AccessDeniedException("This action is prohibited!");
 		}
-		loggedUser.setName(user.getName());
-		loggedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userRepository.save(loggedUser);
+		User updatedUser = getById(loggedUser.getId());
+		updatedUser.setName(user.getName());
+		updatedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		userRepository.save(updatedUser);
 	}
 
 	@Secured("ROLE_ADMIN")
@@ -100,7 +99,6 @@ public class ProfileServiceImpl implements ProfileService {
 		Assert.notNull(user, "user must not be null");
 		User oldUser = getById(user.getId());
 		oldUser.setName(user.getName());
-		oldUser.setEmail(user.getEmail());
 		oldUser.setPassword(user.getPassword());
 		userRepository.save(oldUser);
 	}

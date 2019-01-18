@@ -19,7 +19,7 @@ import ru.gromov.resvote.util.UserUtil;
 import java.util.List;
 
 @Slf4j
-@RequestMapping(value = "api/v1/admin/users")
+@RequestMapping("${settings.api_url.admin}")
 @RestController
 @RequiredArgsConstructor
 public class AdminRestController {

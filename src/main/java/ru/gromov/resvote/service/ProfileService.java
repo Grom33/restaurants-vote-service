@@ -1,6 +1,7 @@
 package ru.gromov.resvote.service;
 
 import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.to.UserTo;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface ProfileService {
 
-	User getLoggedUser();
+	UserTo getLoggedUser();
 
 	void updateLoggedUser(User user);
 

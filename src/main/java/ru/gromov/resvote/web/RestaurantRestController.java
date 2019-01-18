@@ -23,7 +23,7 @@ import static ru.gromov.resvote.util.ValidationUtil.*;
  */
 
 @Slf4j
-@RequestMapping(value = "api/v1/restaurants")
+@RequestMapping("${settings.api_url.restaurants}")
 @RestController
 @RequiredArgsConstructor
 public class RestaurantRestController {

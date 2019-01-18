@@ -5,8 +5,10 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.User;
+import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.UserAlreadyExistException;
 import ru.gromov.resvote.util.exception.UserNotFoundException;
 
@@ -28,23 +30,13 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Autowired
 	private ProfileService profileService;
 
-	@WithMockUser(value = "ivan@mail.ru")
+	@WithUserDetails("ivan@mail.ru")
 	@SneakyThrows
 	@Test
 	public void getLoggedUser() {
-		final User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
-		assertEquals(profileService.getLoggedUser(), user);
-	}
+		final UserTo user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), UserTo.class);
+		assertThat(profileService.getLoggedUser()).isEqualToIgnoringGivenFields(user, "password");
 
-	@WithMockUser(value = "ivan@mail.ru")
-	@SneakyThrows
-	@Test
-	public void updateLoggedUser() {
-		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
-		user.setName("TEST");
-		user.setPassword("123456");
-		profileService.updateLoggedUser(user);
-		assertEquals(profileService.getLoggedUser(), user);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})

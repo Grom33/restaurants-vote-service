@@ -29,4 +29,8 @@ server:
   port: 8787
 settings:
   deadline: "11:00"
+  api_url:
+    admin: "api/v1/admin/users"
+    restaurants: "api/v1/restaurants"
+    profile: "api/v1/users"
 
