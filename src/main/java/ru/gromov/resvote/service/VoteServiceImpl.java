@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import ru.gromov.resvote.model.Vote;
 import ru.gromov.resvote.repository.VoteRepository;
 import ru.gromov.resvote.security.AuthorizedUser;
