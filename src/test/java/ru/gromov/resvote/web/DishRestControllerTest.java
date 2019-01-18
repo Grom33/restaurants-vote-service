@@ -45,14 +45,14 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
 	@Test
-	public void addDishes() {
+	public void createDishes() {
 		final int restaurantID = 1;
 		final int dishesCountAfterAdd = 5;
 		String json = util.getJsonString(util.getTestFile(NEW_DISHES).toPath());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantID + "/dishes")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 		assertEquals(dishesCountAfterAdd,
 				dishService.getByRestaurantId(restaurantID, LocalDate.now()).size());
 	}

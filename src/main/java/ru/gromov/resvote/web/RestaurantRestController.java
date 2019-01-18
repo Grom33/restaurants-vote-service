@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Restaurant;
 import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.RestaurantTo;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,7 +37,6 @@ public class RestaurantRestController {
 	                                 @RequestParam(value = "size", required = false) final Integer size) {
 		log.info("GET request: Get list of restaurants");
 		if (page == null && size == null) {
-
 			return createListToFromListEntity(restaurantService.getAll());
 		} else {
 			return createListToFromListEntity(restaurantService.getAllPaginated(page, size));
@@ -46,7 +45,8 @@ public class RestaurantRestController {
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public RestaurantTo create(@RequestBody final RestaurantTo restaurant) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public RestaurantTo create(@Valid @RequestBody final RestaurantTo restaurant) {
 		log.info("POST request: Add restaurant: {}", restaurant);
 		return createToFromEntity(restaurantService.create(createNewFromTo(restaurant)));
 	}
@@ -58,13 +58,13 @@ public class RestaurantRestController {
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@PathVariable final String id,
-	                                @RequestBody final RestaurantTo restaurantTo) {
+	@ResponseStatus(HttpStatus.OK)
+	public RestaurantTo update(@PathVariable final String id,
+	                           @Valid @RequestBody final RestaurantTo restaurantTo) {
 		log.info("PUT request: update restaurant by id: {}, restaurant: {}", id, restaurantTo);
 		Restaurant restaurant = createNewFromTo(restaurantTo);
 		assureIdConsistent(restaurant, Long.valueOf(id));
-		restaurantService.update(restaurant);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return createToFromEntity(restaurantService.update(restaurant));
 	}
 
 	@GetMapping(value = "/dishes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,9 +96,9 @@ public class RestaurantRestController {
 
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> delete(@PathVariable final String id) {
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable final String id) {
 		log.info("DELETE request: delete restaurant by id: {}", id);
 		restaurantService.delete(Long.valueOf(id));
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

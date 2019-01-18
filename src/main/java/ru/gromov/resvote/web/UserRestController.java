@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
+
+import javax.validation.Valid;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -32,16 +33,20 @@ public class UserRestController {
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateLoggedUser(@RequestBody final UserTo user) {
+	public UserTo updateLoggedUser(@Valid @RequestBody final UserTo user) {
 		log.info("PUT request: update logged user");
-		profileService.updateLoggedUser(UserUtil.getUserFromTo(user));
-		return new ResponseEntity<>(HttpStatus.OK);
+		return UserUtil.getTo(
+				profileService.updateLoggedUser(
+						UserUtil.getUserFromTo(user)));
+
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> userRegistration(@RequestBody final UserTo user) {
+	public UserTo userRegistration(@Valid @RequestBody final UserTo user) {
 		log.info("POST request: new user registration");
-		profileService.userRegistration(UserUtil.getUserFromTo(user));
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return UserUtil.getTo(
+				profileService.userRegistration(
+						UserUtil.getUserFromTo(user)));
 	}
 }

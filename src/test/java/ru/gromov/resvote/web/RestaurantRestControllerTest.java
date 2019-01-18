@@ -52,7 +52,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 		ResultActions action = mockMvc.perform(post(REST_URL + "restaurants")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 		Restaurant restaurant = objectMapper.readValue(getContent(action), Restaurant.class);
 		assertFalse(restaurant.isNew());
 		assertEquals(newUserCount, restaurantService.getAll().size());

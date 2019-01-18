@@ -49,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@Transactional
 	@Override
-	public void updateLoggedUser(final User user) {
+	public User updateLoggedUser(final User user) {
 		log.info("Update logged user");
 		final UserTo loggedUser = AuthorizedUser.get().getUserTo();
 		if (!((Long) loggedUser.getId()).equals(user.getId())) {
@@ -59,7 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
 		User updatedUser = getById(loggedUser.getId());
 		updatedUser.setName(user.getName());
 		updatedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userRepository.save(updatedUser);
+		return userRepository.save(updatedUser);
 	}
 
 	@Secured("ROLE_ADMIN")
@@ -97,13 +97,13 @@ public class ProfileServiceImpl implements ProfileService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public void update(final User user) {
+	public User update(final User user) {
 		log.info("Update user: {}", user);
 		Assert.notNull(user, "user must not be null");
 		User oldUser = getById(user.getId());
 		oldUser.setName(user.getName());
 		oldUser.setPassword(user.getPassword());
-		userRepository.save(oldUser);
+		return userRepository.save(oldUser);
 	}
 
 	@CacheEvict(value = "user", allEntries = true)

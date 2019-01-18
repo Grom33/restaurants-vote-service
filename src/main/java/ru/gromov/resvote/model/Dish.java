@@ -4,8 +4,7 @@ package ru.gromov.resvote.model;
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -35,7 +34,7 @@ public class Dish extends AbstractNamedEntity {
 	@Column(name = "price", nullable = false, precision = 10, scale = 2)
 	private BigDecimal price;
 
-	@NotNull
+
 	@JsonBackReference(value = "restaurant")
 	@JoinColumn(name = "rest_id", nullable = false)
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -52,7 +52,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 		ResultActions action = mockMvc.perform(post(REST_URL + "admin/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 		User user = objectMapper.readValue(getContent(action), User.class);
 		assertFalse(user.isNew());
 		assertEquals(newUserCount, profileService.getAll().size());

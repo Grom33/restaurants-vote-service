@@ -98,11 +98,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public void update(final Restaurant restaurant) {
+	public Restaurant update(final Restaurant restaurant) {
 		log.info("Update restaurant entity: {}", restaurant);
+		Assert.notNull(restaurant, "Restaurant must not be null");
 		Restaurant rest = getById(restaurant.getId());
 		rest.setName(restaurant.getName());
-		restaurantRepository.save(rest);
+		return restaurantRepository.save(rest);
 	}
 
 	@CacheEvict(value = {"restaurant", "restaurant_with_dishes"}, allEntries = true)

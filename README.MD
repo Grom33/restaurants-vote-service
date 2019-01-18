@@ -5,7 +5,7 @@
 
 # **Graduation project: "Restaurant vote system"**
     
-### Graduation task
+## Graduation task
 Build a voting system for deciding where to have lunch.
 Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boot) **without frontend** 
 
@@ -17,13 +17,19 @@ Design and implement a REST API using Hibernate/Spring/Spring MVC (or Spring-Boo
     - If user votes again the same day:
         - If it is before 11:00 we asume that he changed his mind.
         - If it is after 11:00 then it is too late, vote can't be changed
-    
+Each restaurant provides new menu each day.
+        
+As a result, provide a link to github repository. It should contain the code, README.md with API documentation and couple curl commands to test it.
+
+-----------------------------
+
 ##### Tech stack
 > Spring Frameworks (Boot, DATA JPA, MVC); Hibernate;
 > Embedded DB (H2);
 > Swagger API Documetation 
-     
-## API documentation
+    
+    
+### API documentation
     This documentation is available at URL: http://localhost:8787/swagger-ui.html, 
     Also there is a API client. To use the API client, use the following data for 
     authorization: 1) regular user ivan@mail.ru:password 2) admin: admin@mail.ru:password

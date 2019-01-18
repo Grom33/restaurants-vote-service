@@ -47,14 +47,14 @@ public class DishServiceImpl implements DishService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public void update(final Dish dish) {
+	public Dish update(final Dish dish) {
 		log.info("Update dish: {}", dish);
 		Assert.notNull(dish, "Dish must not be null");
 		Dish oldDish = getById(dish.getId());
 		oldDish.setName(dish.getName());
 		oldDish.setDate(dish.getDate());
 		oldDish.setPrice(dish.getPrice());
-		dishRepository.save(oldDish);
+		return dishRepository.save(oldDish);
 	}
 
 

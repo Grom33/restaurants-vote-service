@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
@@ -18,6 +17,7 @@ import ru.gromov.resvote.service.DishService;
 import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.DishTo;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,10 +45,11 @@ public class DishRestController {
 		return dishService.getByRestaurantId(Long.valueOf(restaurantId), useDate);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/{restaurantId}/dishes", produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<Dish> create(@PathVariable final String restaurantId,
-	                         @RequestBody final List<DishTo> dishes) {
+	                         @Valid @RequestBody final List<DishTo> dishes) {
 		log.info("POST request: add dishes to restaurant, id: {}, dishes count: {}", restaurantId, dishes.size());
 		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
 
@@ -65,20 +66,20 @@ public class DishRestController {
 		return dishService.getById(Long.valueOf(id));
 	}
 
+	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> update(@RequestBody final Dish dish,
-	                                @PathVariable final String id) {
+	public Dish update(@Valid @RequestBody final Dish dish,
+	                   @PathVariable final String id) {
 		log.info("PUT request: update dish by id {}, dish:", id, dish);
 		assureIdConsistent(dish, Long.valueOf(id));
-		dishService.update(dish);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return dishService.update(dish);
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/dishes/{id}")
-	public ResponseEntity<?> delete(@PathVariable final String id) {
+	public void delete(@PathVariable final String id) {
 		log.info("DELETE request: delete dish by id: {}", id);
 		dishService.delete(Long.valueOf(id));
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

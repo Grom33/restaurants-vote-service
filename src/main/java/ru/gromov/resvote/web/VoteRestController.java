@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.service.VoteService;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
@@ -38,18 +37,18 @@ public class VoteRestController {
 		return voteService.findAllVotersByRestaurantAndDate(Long.valueOf(id), useDate);
 	}
 
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/vote")
-	public ResponseEntity<?> deleteVote() {
+	public void deleteVote() {
 		log.info("DELETE request: delete user vote");
 		voteService.deleteCurrentVoteOfUser();
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@ResponseStatus(value = HttpStatus.OK)
 	@PostMapping(value = "/{id}/vote")
-	public ResponseEntity<?> makeVote(@PathVariable final String id) {
+	public void makeVote(@PathVariable final String id) {
 		log.info("POST request: make user vote");
 		voteService.makeVote(Long.valueOf(id), LocalTime.now());
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/vote")

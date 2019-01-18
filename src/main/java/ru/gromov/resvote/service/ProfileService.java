@@ -13,7 +13,7 @@ public interface ProfileService {
 
 	UserTo getLoggedUser();
 
-	void updateLoggedUser(User user);
+	User updateLoggedUser(User user);
 
 	List<User> getAll();
 
@@ -21,7 +21,7 @@ public interface ProfileService {
 
 	User getById(long id);
 
-	void update(User user);
+	User update(User user);
 
 	void delete(long id);
 

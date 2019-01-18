@@ -14,7 +14,7 @@ public interface DishService {
 
 	List<Dish> getByRestaurantId(long id, LocalDate date);
 
-	void update(Dish dish);
+	Dish update(Dish dish);
 
 	void delete(long id);
 

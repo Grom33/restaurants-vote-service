@@ -9,13 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -32,9 +32,10 @@ public class AdminRestController {
 		return userService.getAll();
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public User createUser(@RequestBody final User user) {
+	public User createUser(@Valid @RequestBody final User user) {
 		log.info("POST request: create user:{}", user);
 		return userService.create(user);
 	}
@@ -45,17 +46,17 @@ public class AdminRestController {
 		return userService.getById(Long.valueOf(id));
 	}
 
+	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateUser(@RequestBody final UserTo user) {
+	public User updateUser(@Valid @RequestBody final UserTo user) {
 		log.info("PUT request: update user: {}", user);
-		userService.update(UserUtil.getUserFromTo(user));
-		return new ResponseEntity<>(HttpStatus.OK);
+		return userService.update(UserUtil.getUserFromTo(user));
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deleteUser(@PathVariable final String id) {
+	public void deleteUser(@PathVariable final String id) {
 		log.info("DELETE request: delete user by id: {}", id);
 		userService.delete(Long.valueOf(id));
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

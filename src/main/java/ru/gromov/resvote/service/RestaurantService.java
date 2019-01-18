@@ -23,7 +23,7 @@ public interface RestaurantService {
 
 	Restaurant getById(long id);
 
-	void update(Restaurant restaurant);
+	Restaurant update(Restaurant restaurant);
 
 	void delete(long id);
 
