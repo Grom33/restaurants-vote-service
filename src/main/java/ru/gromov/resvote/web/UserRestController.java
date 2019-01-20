@@ -37,7 +37,7 @@ public class UserRestController {
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserTo updateLoggedUser(@Valid @RequestBody final UserTo user,
 	                               @AuthenticationPrincipal AuthorizedUser authorizedUser) {
-		log.info("PUT request: update logged user");
+		log.debug("PUT request: update logged user");
 		return UserUtil.getTo(
 				userService.updateLoggedUser(
 						UserUtil.getUserFromTo(user), authorizedUser.getUserTo()));
@@ -46,7 +46,7 @@ public class UserRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/registration", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public UserTo userRegistration(@Valid @RequestBody final UserTo user) {
-		log.info("POST request: new user registration");
+		log.debug("POST request: new user registration");
 		return UserUtil.getTo(
 				userService.userRegistration(
 						UserUtil.getUserFromTo(user)));

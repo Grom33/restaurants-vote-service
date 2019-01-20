@@ -38,7 +38,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAll() {
-		log.info("Get list of restaurants");
+		log.debug("Get list of restaurants");
 		return restaurantRepository.findAll();
 	}
 
@@ -46,7 +46,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllPaginated(final int page, final int size) {
-		log.info("Get paginated list of restaurants. Page: {}, size: {}", page, size);
+		log.debug("Get paginated list of restaurants. Page: {}, size: {}", page, size);
 		return restaurantRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
 
@@ -54,7 +54,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDate(final LocalDate date) {
-		log.info("Get list of restaurants with dishes by date: {}", date);
+		log.debug("Get list of restaurants with dishes by date: {}", date);
 		return restaurantRepository.getAllRestaurantWithDishesByDate(date);
 	}
 
@@ -72,7 +72,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	@Override
 	public Restaurant create(final Restaurant restaurant) {
-		log.info("Add restaurant: {}", restaurant);
+		log.debug("Add restaurant: {}", restaurant);
 		Assert.notNull(restaurant, "Restaurant must not be null");
 		if (restaurantRepository.findByName(restaurant.getName()).isPresent()) {
 			throw new AlreadyExistException(
@@ -85,7 +85,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public Restaurant getById(final long id) {
-		log.info("Get restaurant with id {}", id);
+		log.debug("Get restaurant with id {}", id);
 		return restaurantRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException(
 						String.format("Restaurant with id %s not found", id)));
@@ -96,7 +96,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	@Override
 	public Restaurant update(final Restaurant restaurant) {
-		log.info("Update restaurant entity: {}", restaurant);
+		log.debug("Update restaurant entity: {}", restaurant);
 		Assert.notNull(restaurant, "Restaurant must not be null");
 		Restaurant rest = getById(restaurant.getId());
 		rest.setName(restaurant.getName());
@@ -108,7 +108,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	@Override
 	public void delete(final long id) {
-		log.info("Delete restaurant entity with id: {}", id);
+		log.debug("Delete restaurant entity with id: {}", id);
 		checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
 	}
 
@@ -117,7 +117,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDatePaginated(
 			LocalDate date, Integer page, Integer size) {
-		log.info("Get paginated list of restaurants with dishes by date: {}, page: {}, size: {}", date, page, size);
+		log.debug("Get paginated list of restaurants with dishes by date: {}, page: {}, size: {}", date, page, size);
 		return restaurantRepository.getAllRestaurantWithDishesByDatePaginated(date, PageRequest.of(page, size)).getContent();
 	}
 }

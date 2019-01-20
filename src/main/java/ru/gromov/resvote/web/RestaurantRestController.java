@@ -35,7 +35,7 @@ public class RestaurantRestController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<RestaurantTo> getAll(@RequestParam(value = "page", required = false) final Integer page,
 	                                 @RequestParam(value = "size", required = false) final Integer size) {
-		log.info("GET request: Get list of restaurants");
+		log.debug("GET request: Get list of restaurants");
 		if (page == null && size == null) {
 			return createListToFromListEntity(restaurantService.getAll());
 		} else {
@@ -47,13 +47,13 @@ public class RestaurantRestController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestaurantTo create(@Valid @RequestBody final RestaurantTo restaurant) {
-		log.info("POST request: Add restaurant: {}", restaurant);
+		log.debug("POST request: Add restaurant: {}", restaurant);
 		return createToFromEntity(restaurantService.create(createNewFromTo(restaurant)));
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public RestaurantTo get(@PathVariable final String id) {
-		log.info("GET request: get restaurant by id: {}", id);
+		log.debug("GET request: get restaurant by id: {}", id);
 		return createToFromEntity(restaurantService.getById(Long.valueOf(id)));
 	}
 
@@ -61,7 +61,7 @@ public class RestaurantRestController {
 	@ResponseStatus(HttpStatus.OK)
 	public RestaurantTo update(@PathVariable final String id,
 	                           @Valid @RequestBody final RestaurantTo restaurantTo) {
-		log.info("PUT request: update restaurant by id: {}, restaurant: {}", id, restaurantTo);
+		log.debug("PUT request: update restaurant by id: {}, restaurant: {}", id, restaurantTo);
 		Restaurant restaurant = createNewFromTo(restaurantTo);
 		assureIdConsistent(restaurant, Long.valueOf(id));
 		return createToFromEntity(restaurantService.update(restaurant));
@@ -73,7 +73,7 @@ public class RestaurantRestController {
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
 			@RequestParam(value = "page", required = false) final Integer page,
 			@RequestParam(value = "size", required = false) final Integer size) {
-		log.info("GET request: get list of restaurants with dishes by date: {}", date);
+		log.debug("GET request: get list of restaurants with dishes by date: {}", date);
 
 		LocalDate useDate = date;
 		if (useDate == null) useDate = LocalDate.now();
@@ -88,7 +88,7 @@ public class RestaurantRestController {
 	public Restaurant getWithDishesByDate(@PathVariable final String id,
 	                                      @RequestParam(value = "date", required = false)
 	                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-		log.info("GET request: get restaurant with dishes by date: {}", date);
+		log.debug("GET request: get restaurant with dishes by date: {}", date);
 		LocalDate useDate = date;
 		if (useDate == null) useDate = LocalDate.now();
 		return restaurantService.getRestaurantWithDishesByDate(Long.valueOf(id), useDate);
@@ -98,7 +98,7 @@ public class RestaurantRestController {
 	@DeleteMapping(value = "/{id}")
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable final String id) {
-		log.info("DELETE request: delete restaurant by id: {}", id);
+		log.debug("DELETE request: delete restaurant by id: {}", id);
 		restaurantService.delete(Long.valueOf(id));
 	}
 }

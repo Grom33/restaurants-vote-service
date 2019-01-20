@@ -90,7 +90,7 @@ public class RestExceptionHandler {
 	}
 
 	private ErrorInfo getErrorInfo(HttpServletRequest req, Exception e, ErrorType errorType) {
-		log.info("req {}, e {}, error:{}", req, e, errorType);
+		log.debug("req {}, e {}, error:{}", req, e, errorType);
 		return new ErrorInfo(req.getRequestURL(), errorType, e.getMessage());
 	}
 

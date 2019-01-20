@@ -28,7 +28,7 @@ public class AdminRestController {
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<User> getAllUsers() {
-		log.info("GET request: get all users list");
+		log.debug("GET request: get all users list");
 		return adminService.getAll();
 	}
 
@@ -36,27 +36,27 @@ public class AdminRestController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public User createUser(@Valid @RequestBody final User user) {
-		log.info("POST request: create user:{}", user);
+		log.debug("POST request: create user:{}", user);
 		return adminService.create(user);
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public User getUser(@PathVariable final String id) {
-		log.info("GET request: get user by id: {}", id);
+		log.debug("GET request: get user by id: {}", id);
 		return adminService.getById(Long.valueOf(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public User updateUser(@Valid @RequestBody final UserTo user) {
-		log.info("PUT request: update user: {}", user);
+		log.debug("PUT request: update user: {}", user);
 		return adminService.update(UserUtil.getUserFromTo(user));
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/{id}")
 	public void deleteUser(@PathVariable final String id) {
-		log.info("DELETE request: delete user by id: {}", id);
+		log.debug("DELETE request: delete user by id: {}", id);
 		adminService.delete(Long.valueOf(id));
 	}
 }

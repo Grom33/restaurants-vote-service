@@ -42,7 +42,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	@Override
 	public User updateLoggedUser(final User user, final UserTo loggedUser) {
-		log.info("Update logged user");
+		log.debug("Update logged user");
 		if (!((Long) loggedUser.getId()).equals(user.getId())) {
 			log.warn("User {}, try edit another user profile: {}", loggedUser, user);
 			throw new IllegalArgumentException("This action is prohibited!");
@@ -60,7 +60,7 @@ public class ProfileServiceImpl implements ProfileService {
 	@Transactional
 	@Override
 	public User userRegistration(final User user) {
-		log.info("New user registration: {}", user);
+		log.debug("New user registration: {}", user);
 		Assert.notNull(user, "user must not be null");
 		checkAlreadyExist(user);
 		Set<Role> roleList = new HashSet<>();
