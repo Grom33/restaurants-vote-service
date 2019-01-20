@@ -5,10 +5,8 @@ import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import ru.gromov.resvote.AbstractTest;
 import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.AlreadyExistException;
 import ru.gromov.resvote.util.exception.NotFoundException;
 
@@ -20,7 +18,7 @@ import static org.junit.Assert.*;
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
-public class ProfileServiceImplTest extends AbstractTest {
+public class AdminServiceImplTest extends AbstractTest {
 
 	private static final String LOGGED_USER_IVAN = "json/logged_user_ivan.json";
 	private static final String USERS_LIST = "json/users_list.json";
@@ -28,16 +26,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	private static final String EDITED_USER = "json/edited_user.json";
 
 	@Autowired
-	private ProfileService profileService;
-
-	@WithUserDetails("ivan@mail.ru")
-	@SneakyThrows
-	@Test
-	public void getLoggedUser() {
-		final UserTo user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), UserTo.class);
-		assertThat(profileService.getLoggedUser()).isEqualToIgnoringGivenFields(user, "password");
-
-	}
+	private AdminService adminService;
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
@@ -46,7 +35,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 		List<User> usersList = objectMapper.readValue(
 				util.getTestFile(USERS_LIST), new TypeReference<List<User>>() {
 				});
-		assertThat(profileService.getAll()).isEqualTo(usersList);
+		assertThat(adminService.getAll()).isEqualTo(usersList);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -55,7 +44,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	public void create() {
 		User user = objectMapper.readValue(util.getTestFile(NEW_USER), User.class);
 		assertTrue(user.isNew());
-		User newUser = profileService.create(user);
+		User newUser = adminService.create(user);
 		assertFalse(newUser.isNew());
 	}
 
@@ -64,7 +53,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Test(expected = AlreadyExistException.class)
 	public void createUserExist() {
 		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		profileService.create(user);
+		adminService.create(user);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -72,7 +61,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Test
 	public void getById() {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
-		assertEquals(user, profileService.getById(user.getId()));
+		assertEquals(user, adminService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -80,7 +69,7 @@ public class ProfileServiceImplTest extends AbstractTest {
 	@Test(expected = NotFoundException.class)
 	public void getByWrongId() {
 		final int wrongId = 999;
-		profileService.getById(wrongId);
+		adminService.getById(wrongId);
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -89,15 +78,15 @@ public class ProfileServiceImplTest extends AbstractTest {
 	public void update() {
 		User user = objectMapper.readValue(util.getTestFile(LOGGED_USER_IVAN), User.class);
 		user.setEmail("new@mail.ru");
-		profileService.update(user);
-		assertEquals(user, profileService.getById(user.getId()));
+		adminService.update(user);
+		assertEquals(user, adminService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@Test(expected = NotFoundException.class)
 	public void delete() {
 		final long userToDelete = 2L;
-		profileService.delete(userToDelete);
-		profileService.getById(userToDelete);
+		adminService.delete(userToDelete);
+		adminService.getById(userToDelete);
 	}
 }

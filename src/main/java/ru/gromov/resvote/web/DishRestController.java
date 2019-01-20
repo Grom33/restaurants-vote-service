@@ -13,9 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.Dish;
 import ru.gromov.resvote.model.Restaurant;
-import ru.gromov.resvote.service.DishService;
+import ru.gromov.resvote.repository.DishRepository;
 import ru.gromov.resvote.service.RestaurantService;
 import ru.gromov.resvote.to.DishTo;
+import ru.gromov.resvote.util.exception.NotFoundException;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ import static ru.gromov.resvote.util.ValidationUtil.*;
 @RequiredArgsConstructor
 public class DishRestController {
 	@Autowired
-	private final DishService dishService;
+	private final DishRepository dishRepository;
 
 	@Autowired
 	private final RestaurantService restaurantService;
@@ -40,9 +41,11 @@ public class DishRestController {
 	                                  @RequestParam(value = "date", required = false)
 	                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final LocalDate date) {
 		log.info("GET request: get dishes list by restaurant id: {}, date: {}", restaurantId, date);
+
 		LocalDate useDate = date;
+		final long restId = Long.valueOf(restaurantId);
 		if (date == null) useDate = LocalDate.now();
-		return dishService.getByRestaurantId(Long.valueOf(restaurantId), useDate);
+		return dishRepository.getByRestaurantId(restId, useDate);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -51,19 +54,22 @@ public class DishRestController {
 	public List<Dish> create(@PathVariable final String restaurantId,
 	                         @Valid @RequestBody final List<DishTo> dishes) {
 		log.info("POST request: add dishes to restaurant, id: {}, dishes count: {}", restaurantId, dishes.size());
-		Restaurant restaurant = restaurantService.getById(Long.valueOf(restaurantId));
+		final long restId = Long.valueOf(restaurantId);
+		Restaurant restaurant = restaurantService.getById(restId);
 
 		List<Dish> dishList = dishes.stream()
 				.map(dish -> new Dish(
 						dish.getName(), dish.getPrice(), restaurant, LocalDate.now()
 				)).collect(Collectors.toList());
-		return dishService.createAll(dishList);
+		return dishRepository.saveAll(dishList);
 	}
 
 	@GetMapping(value = "/dishes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Dish get(@PathVariable final String id) {
 		log.info("GET request: get dish by id {}", id);
-		return dishService.getById(Long.valueOf(id));
+		final long dishId = Long.valueOf(id);
+		return dishRepository.findById(dishId).orElseThrow(() -> new NotFoundException(
+				String.format("Dish with id %s not found!", id)));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
@@ -71,15 +77,22 @@ public class DishRestController {
 	public Dish update(@Valid @RequestBody final Dish dish,
 	                   @PathVariable final String id) {
 		log.info("PUT request: update dish by id {}, dish:", id, dish);
-		assureIdConsistent(dish, Long.valueOf(id));
-		return dishService.update(dish);
+		final long dishId = Long.valueOf(id);
+		assureIdConsistent(dish, dishId);
+		Dish oldDish = dishRepository.findById(dishId).orElseThrow(() -> new NotFoundException(
+				String.format("Dish with id %s not found!", dishId)));
+		oldDish.setName(dish.getName());
+		oldDish.setDate(dish.getDate());
+		oldDish.setPrice(dish.getPrice());
+		return dishRepository.save(oldDish);
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/dishes/{id}")
 	public void delete(@PathVariable final String id) {
 		log.info("DELETE request: delete dish by id: {}", id);
-		dishService.delete(Long.valueOf(id));
+		final long dishId = Long.valueOf(id);
+		checkNotFoundWithId(dishRepository.delete(dishId) != 0, dishId);
 	}
 
 }

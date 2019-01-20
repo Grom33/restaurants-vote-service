@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.service.ProfileService;
+import ru.gromov.resvote.service.AdminService;
 import ru.gromov.resvote.util.exception.NotFoundException;
 
 import static org.junit.Assert.assertEquals;
@@ -16,7 +16,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.gromov.resvote.TestUtil.getContent;
-
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
@@ -30,7 +29,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 	private static final String EDITED_USER = "json/edited_user.json";
 
 	@Autowired
-	private ProfileService profileService;
+	private AdminService adminService;
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
@@ -55,7 +54,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 				.andExpect(status().isCreated());
 		User user = objectMapper.readValue(getContent(action), User.class);
 		assertFalse(user.isNew());
-		assertEquals(newUserCount, profileService.getAll().size());
+		assertEquals(newUserCount, adminService.getAll().size());
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -80,7 +79,7 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 				.content(json))
 				.andExpect(status().isOk());
 		User user = objectMapper.readValue(util.getTestFile(EDITED_USER), User.class);
-		assertEquals(user, profileService.getById(user.getId()));
+		assertEquals(user, adminService.getById(user.getId()));
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
@@ -90,6 +89,6 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
 		final int userId = 2;
 		mockMvc.perform(delete(REST_URL + "admin/users/" + userId))
 				.andExpect(status().isNoContent());
-		profileService.getById(userId);
+		adminService.getById(userId);
 	}
 }

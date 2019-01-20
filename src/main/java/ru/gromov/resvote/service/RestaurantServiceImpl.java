@@ -16,9 +16,6 @@ import ru.gromov.resvote.repository.RestaurantRepository;
 import ru.gromov.resvote.util.exception.AlreadyExistException;
 import ru.gromov.resvote.util.exception.NotFoundException;
 
-
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Cacheable("restaurant")
 	@Transactional(readOnly = true)
 	@Override
-	public List<Restaurant> getAllPaginated(@PositiveOrZero final int page, @Positive final int size) {
+	public List<Restaurant> getAllPaginated(final int page, final int size) {
 		log.info("Get paginated list of restaurants. Page: {}, size: {}", page, size);
 		return restaurantRepository.findAll(PageRequest.of(page, size)).getContent();
 	}
@@ -64,7 +61,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Cacheable("restaurant_with_dishes")
 	@Override
-	public Restaurant getRestaurantWithDishesByDate(@Positive long id, LocalDate date) {
+	public Restaurant getRestaurantWithDishesByDate(long id, LocalDate date) {
 		return restaurantRepository.getRestaurantWithDishesByDate(id, date)
 				.orElseThrow(() -> new NotFoundException(
 						String.format("Restaurant with id %s not found", id)));
@@ -87,7 +84,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Restaurant getById(@Positive final long id) {
+	public Restaurant getById(final long id) {
 		log.info("Get restaurant with id {}", id);
 		return restaurantRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException(
@@ -110,7 +107,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Secured("ROLE_ADMIN")
 	@Transactional
 	@Override
-	public void delete(@Positive final long id) {
+	public void delete(final long id) {
 		log.info("Delete restaurant entity with id: {}", id);
 		checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
 	}
@@ -119,7 +116,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Restaurant> getAllRestaurantWithDishesByDatePaginated(
-			LocalDate date, @PositiveOrZero Integer page, @Positive Integer size) {
+			LocalDate date, Integer page, Integer size) {
 		log.info("Get paginated list of restaurants with dishes by date: {}, page: {}, size: {}", date, page, size);
 		return restaurantRepository.getAllRestaurantWithDishesByDatePaginated(date, PageRequest.of(page, size)).getContent();
 	}

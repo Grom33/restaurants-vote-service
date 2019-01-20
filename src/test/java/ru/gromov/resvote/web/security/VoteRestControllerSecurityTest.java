@@ -3,11 +3,11 @@ package ru.gromov.resvote.web.security;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import ru.gromov.resvote.service.VoteService;
 
 import java.time.LocalTime;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.gromov.resvote.TestUtil.setDeadlineTime;
@@ -20,26 +20,21 @@ public class VoteRestControllerSecurityTest extends AbstractSecurityControllerTe
 	@Autowired
 	private VoteService voteService;
 
-
-	@WithAnonymousUser
 	@SneakyThrows
 	@Test
 	public void deleteVoteByAnonymous() {
-		expectedNestedException();
-		mockMvc.perform(delete(REST_URL + "restaurants/vote"))
-				.andExpect(status().isNoContent());
+		mockMvc.perform(delete(REST_URL + "restaurants/vote")
+				.with(anonymous()))
+				.andExpect(status().isUnauthorized());
 	}
 
-	@WithAnonymousUser
 	@SneakyThrows
 	@Test
 	public void makeVoteByAnonymous() {
-		expectedNestedException();
 		final int restaurantId = 1;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
-		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
-				.andExpect(status().isOk());
+		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote")
+				.with(anonymous()))
+				.andExpect(status().isUnauthorized());
 	}
-
-
 }

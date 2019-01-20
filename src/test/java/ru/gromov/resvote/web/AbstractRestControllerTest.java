@@ -16,12 +16,12 @@ import javax.annotation.PostConstruct;
 
 public abstract class AbstractRestControllerTest extends AbstractTest {
 
-	private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
+	protected static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
-	protected final String REST_URL="/api/v1/";
+	protected final String REST_URL = "/api/v1/";
 
 	@Autowired
-	private WebApplicationContext webApplicationContext;
+	protected WebApplicationContext webApplicationContext;
 
 	protected MockMvc mockMvc;
 
@@ -35,6 +35,7 @@ public abstract class AbstractRestControllerTest extends AbstractTest {
 		mockMvc = MockMvcBuilders
 				.webAppContextSetup(webApplicationContext)
 				.addFilter(CHARACTER_ENCODING_FILTER)
+				//.apply(springSecurity())
 				.build();
 	}
 }

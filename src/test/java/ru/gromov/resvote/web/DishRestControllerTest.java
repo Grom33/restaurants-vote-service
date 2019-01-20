@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import ru.gromov.resvote.model.Dish;
-import ru.gromov.resvote.service.DishService;
-import ru.gromov.resvote.util.exception.NotFoundException;
+import ru.gromov.resvote.repository.DishRepository;
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,7 +28,7 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	private static final String NEW_DISHES = "json/new_dishes.json";
 
 	@Autowired
-	private DishService dishService;
+	private DishRepository dishService;
 
 	@SneakyThrows
 	@Test
@@ -73,23 +73,23 @@ public class DishRestControllerTest extends AbstractRestControllerTest {
 	@SneakyThrows
 	@Test
 	public void update() {
-		final int dishId = 1;
+		final long dishId = 1L;
 		String json = util.getJsonString(util.getTestFile(EDITED_DISH).toPath());
 		mockMvc.perform(put(REST_URL + "restaurants/dishes/" + dishId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
 				.andExpect(status().isOk());
 		final Dish dish = objectMapper.readValue(util.getTestFile(EDITED_DISH), Dish.class);
-		assertEquals(dish.getName(), dishService.getById(dish.getId()).getName());
+		assertEquals(dish.getName(), dishService.findById(dish.getId()).get().getName());
 	}
 
 	@WithMockUser(roles = {"ADMIN"})
 	@SneakyThrows
-	@Test(expected = NotFoundException.class)
+	@Test(expected = NoSuchElementException.class)
 	public void deleteDish() {
-		final int dishId = 1;
+		final long dishId = 1L;
 		mockMvc.perform(delete(REST_URL + "restaurants/dishes/" + dishId))
 				.andExpect(status().isNoContent());
-		dishService.getById(dishId);
+		dishService.findById(dishId).get();
 	}
 }

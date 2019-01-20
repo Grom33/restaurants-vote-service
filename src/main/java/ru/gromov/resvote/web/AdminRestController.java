@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.gromov.resvote.model.User;
-import ru.gromov.resvote.service.ProfileService;
+import ru.gromov.resvote.service.AdminService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
 
@@ -24,12 +24,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminRestController {
 	@Autowired
-	private final ProfileService userService;
+	private final AdminService adminService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<User> getAllUsers() {
 		log.info("GET request: get all users list");
-		return userService.getAll();
+		return adminService.getAll();
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -37,26 +37,26 @@ public class AdminRestController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public User createUser(@Valid @RequestBody final User user) {
 		log.info("POST request: create user:{}", user);
-		return userService.create(user);
+		return adminService.create(user);
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public User getUser(@PathVariable final String id) {
 		log.info("GET request: get user by id: {}", id);
-		return userService.getById(Long.valueOf(id));
+		return adminService.getById(Long.valueOf(id));
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public User updateUser(@Valid @RequestBody final UserTo user) {
 		log.info("PUT request: update user: {}", user);
-		return userService.update(UserUtil.getUserFromTo(user));
+		return adminService.update(UserUtil.getUserFromTo(user));
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping(value = "/{id}")
 	public void deleteUser(@PathVariable final String id) {
 		log.info("DELETE request: delete user by id: {}", id);
-		userService.delete(Long.valueOf(id));
+		adminService.delete(Long.valueOf(id));
 	}
 }

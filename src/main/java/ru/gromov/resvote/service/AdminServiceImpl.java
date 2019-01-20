@@ -10,63 +10,77 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import ru.gromov.resvote.model.Role;
 import ru.gromov.resvote.model.User;
 import ru.gromov.resvote.repository.UserRepository;
-import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.exception.AlreadyExistException;
 import ru.gromov.resvote.util.exception.NotFoundException;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
+import static ru.gromov.resvote.util.ValidationUtil.checkNotFoundWithId;
 
 /*
  *   Created by Gromov Vitaly, 2019   e-mail: mr.gromov.vitaly@gmail.com
  */
 
-
 @Slf4j
 @CacheConfig(cacheNames = {"user"})
 @Service
 @RequiredArgsConstructor
-public class ProfileServiceImpl implements ProfileService {
-
+public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private final UserRepository userRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@CacheEvict(value = "user", allEntries = true)
-	@Secured({"ROLE_USER", "ROLE_ADMIN"})
-	@Transactional
+	@Secured("ROLE_ADMIN")
 	@Override
-	public User updateLoggedUser(final User user, final UserTo loggedUser) {
-		log.info("Update logged user");
-		if (!((Long) loggedUser.getId()).equals(user.getId())) {
-			log.warn("User {}, try edit another user profile: {}", loggedUser, user);
-			throw new IllegalArgumentException("This action is prohibited!");
-		}
-		User updatedUser = userRepository.findById(loggedUser.getId())
-				.orElseThrow(() -> new NotFoundException(
-						String.format("User with id %s, not found!", loggedUser.getId())
-				));
-		updatedUser.setName(user.getName());
-		updatedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		return userRepository.save(updatedUser);
+	public List<User> getAll() {
+		log.debug("Get list of users");
+		return userRepository.findAll();
 	}
 
 	@CacheEvict(value = "user", allEntries = true)
-	@Transactional
+	@Secured("ROLE_ADMIN")
 	@Override
-	public User userRegistration(final User user) {
-		log.info("New user registration: {}", user);
+	public User create(final User user) {
+		log.debug("Create user: {}", user);
 		Assert.notNull(user, "user must not be null");
 		checkAlreadyExist(user);
-		Set<Role> roleList = new HashSet<>();
-		roleList.add(Role.ROLE_USER);
-		user.setRoles(roleList);
+		if (user.getPassword() != null) user.setPassword(
+				bCryptPasswordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
+	}
+
+	@Secured("ROLE_ADMIN")
+	@Override
+	public User getById( final long id) {
+		log.debug("Get user by id: {}", id);
+		return userRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException(
+						String.format("User with id %s not found", id)));
+	}
+
+	@CacheEvict(value = "user", allEntries = true)
+	@Secured("ROLE_ADMIN")
+	@Transactional
+	@Override
+	public User update(final User user) {
+		log.debug("Update user: {}", user);
+		Assert.notNull(user, "user must not be null");
+		User oldUser = getById(user.getId());
+		oldUser.setName(user.getName());
+		oldUser.setPassword(user.getPassword());
+		return userRepository.save(oldUser);
+	}
+
+	@CacheEvict(value = "user", allEntries = true)
+	@Secured("ROLE_ADMIN")
+	@Override
+	public void delete( final long id) {
+		log.debug("Delete user by id: {}", id);
+		checkNotFoundWithId(userRepository.delete(id) != 0, id);
 	}
 
 	private void checkAlreadyExist(final User user) {
@@ -74,4 +88,5 @@ public class ProfileServiceImpl implements ProfileService {
 			throw new AlreadyExistException(
 					String.format("User with email: %s already exist!", user.getEmail()));
 	}
+
 }

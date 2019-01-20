@@ -6,6 +6,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.gromov.resvote.util.exception.*;
@@ -51,10 +52,10 @@ public class RestExceptionHandler {
 	}
 
 	@Order(Ordered.HIGHEST_PRECEDENCE)
-	@ResponseStatus(value = HttpStatus.FORBIDDEN)
+	@ResponseStatus(value = HttpStatus.CONFLICT)
 	@ExceptionHandler({DeadLineException.class})
 	public ErrorInfo handleDeadlineException(HttpServletRequest req, Exception ex) {
-		log.info("403 Status Code {}", ex.getMessage());
+		log.debug("409 Status Code {}", ex.getMessage());
 		return getErrorInfo(req, ex, DEADLINE_ERROR);
 	}
 
@@ -66,6 +67,19 @@ public class RestExceptionHandler {
 		return getErrorInfo(req, ex, VALIDATION_ERROR);
 	}
 
+	@ResponseStatus(value = HttpStatus.FORBIDDEN)
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	@ExceptionHandler({AccessDeniedException.class})
+	public void handleAccessDenied() {
+	}
+
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	@Order
+	@ExceptionHandler({Exception.class})
+	public ErrorInfo handleAppError(HttpServletRequest req, RuntimeException ex) {
+		log.error("500 Status Code: {} ", ex.getMessage());
+		return getErrorInfo(req, ex, APP_ERROR);
+	}
 
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@ResponseStatus(value = HttpStatus.CONFLICT)

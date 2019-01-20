@@ -55,7 +55,15 @@ public class User extends AbstractNamedEntity {
 
 	public User(long id, String name, String email, String password) {
 		super(id, name);
-		this.email = email;
+		this.email = email.toLowerCase();
 		this.password = password;
+	}
+
+	public User(User user) {
+		super(user.getName());
+		this.email = user.getEmail().toLowerCase();
+		this.password = user.getPassword();
+		this.roles = user.getRoles();
+		this.enabled = user.isEnabled();
 	}
 }

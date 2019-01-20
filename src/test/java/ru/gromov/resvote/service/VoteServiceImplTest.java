@@ -49,7 +49,8 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void deleteCurrentVoteOfUser() {
 		final long restaurantId = 3L;
 		final int expectedCount = 1;
-		voteService.deleteCurrentVoteOfUser();
+		final long loggedUserId = 3L;
+		voteService.deleteCurrentVoteOfUser(loggedUserId);
 		assertEquals(expectedCount,
 				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}
@@ -61,8 +62,9 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void makeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 2;
+		final long loggedUserId = 1L;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
-		voteService.makeVote(restaurantId, LocalTime.now());
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
 		assertEquals(expectedCount,
 				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}
@@ -73,11 +75,12 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void makeVoteByUserManyTimes() {
 		final long restaurantId = 1L;
 		final int expectedCount = 1;
+		final long loggedUserId = 3L;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
-		voteService.makeVote(restaurantId, LocalTime.now());
-		voteService.makeVote(restaurantId, LocalTime.now());
-		voteService.makeVote(restaurantId, LocalTime.now());
-		voteService.makeVote(restaurantId, LocalTime.now());
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
 		assertEquals(
 				expectedCount,
 				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
@@ -89,8 +92,9 @@ public class VoteServiceImplTest extends AbstractTest {
 	public void changeVote() {
 		final long restaurantId = 1L;
 		final int expectedCount = 2;
+		final long loggedUserId = 2L;
 		setDeadlineTime(voteService, LocalTime.now().plusHours(1).toString());
-		voteService.makeVote(restaurantId, LocalTime.now());
+		voteService.makeVote(restaurantId, LocalTime.now(), loggedUserId);
 		assertEquals(expectedCount,
 				voteRepository.findAllVotersByRestaurantAndDate(restaurantId, LocalDate.now()).size());
 	}

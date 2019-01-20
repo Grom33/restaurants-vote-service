@@ -3,10 +3,9 @@ package ru.gromov.resvote.web.security;
 import lombok.SneakyThrows;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 
-
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,71 +18,68 @@ public class RestaurantRestControllerSecurityTest extends AbstractSecurityContro
 	private static final String NEW_RESTAURANT = "json/new_restaurant.json";
 	private static final String EDITED_RESTAURANT_ID_1 = "json/edited_restaurant_id_1.json";
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void addRestaurantByUser() {
-		addRestaurant();
+		String json = util.getJsonString(util.getTestFile(NEW_RESTAURANT).toPath());
+		mockMvc.perform(post(REST_URL + "restaurants")
+				.with(user("ivan@mail.ru"))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isForbidden());
 	}
 
-	@WithAnonymousUser
 	@SneakyThrows
 	@Test
 	public void addRestaurantByAnonymous() {
-		addRestaurant();
-	}
-
-	private void addRestaurant() throws Exception {
-		expectedNestedException();
 		String json = util.getJsonString(util.getTestFile(NEW_RESTAURANT).toPath());
 		mockMvc.perform(post(REST_URL + "restaurants")
+				.with(anonymous())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().isUnauthorized());
 	}
 
-	@WithMockUser
 	@SneakyThrows
 	@Test
 	public void updateByUser() {
-		updateRestaurant();
-	}
-
-	@WithAnonymousUser
-	@SneakyThrows
-	@Test
-	public void updateByAnonymous() {
-		updateRestaurant();
-	}
-
-	private void updateRestaurant() throws Exception {
-		expectedNestedException();
 		final int restaurantId = 1;
 		String json = util.getJsonString(util.getTestFile(EDITED_RESTAURANT_ID_1).toPath());
 		mockMvc.perform(put(REST_URL + "restaurants/" + restaurantId)
+				.with(user("ivan@mail.ru"))
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json))
-				.andExpect(status().isOk());
+				.andExpect(status().isForbidden());
 	}
 
-	@WithMockUser
+	@SneakyThrows
+	@Test
+	public void updateByAnonymous() {
+		final int restaurantId = 1;
+		String json = util.getJsonString(util.getTestFile(EDITED_RESTAURANT_ID_1).toPath());
+		mockMvc.perform(put(REST_URL + "restaurants/" + restaurantId)
+				.with(anonymous())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isUnauthorized());
+	}
+
 	@SneakyThrows
 	@Test
 	public void deleteRestaurantByUser() {
-		deleteRestaurant();
+		final int restaurantId = 1;
+		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId)
+				.with(user("ivan@mail.ru")))
+				.andExpect(status().isForbidden());
 	}
 
-	@WithAnonymousUser
 	@SneakyThrows
 	@Test
 	public void deleteRestaurantByAnonymous() {
-		deleteRestaurant();
+		final int restaurantId = 1;
+		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId)
+				.with(anonymous()))
+				.andExpect(status().isUnauthorized());
 	}
 
-	private void deleteRestaurant() throws Exception {
-		expectedNestedException();
-		final int restaurantId = 1;
-		mockMvc.perform(delete(REST_URL + "restaurants/" + restaurantId))
-				.andExpect(status().isNoContent());
-	}
 }

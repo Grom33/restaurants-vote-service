@@ -3,7 +3,6 @@ package ru.gromov.resvote.service;
 import ru.gromov.resvote.to.RestaurantWithVoteTo;
 import ru.gromov.resvote.to.VoterTo;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -14,9 +13,9 @@ import java.util.List;
 
 public interface VoteService {
 
-	void deleteCurrentVoteOfUser();
+	void deleteCurrentVoteOfUser(long userId);
 
-	void makeVote(long restaurantId, LocalTime time);
+	void makeVote(long restaurantId, LocalTime time, long userId);
 
 	List<RestaurantWithVoteTo> getVotedRestaurants(LocalDate date);
 

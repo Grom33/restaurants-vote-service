@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.gromov.resvote.security.AuthorizedUser;
 import ru.gromov.resvote.service.ProfileService;
 import ru.gromov.resvote.to.UserTo;
 import ru.gromov.resvote.util.UserUtil;
@@ -23,22 +25,22 @@ import javax.validation.Valid;
 public class UserRestController {
 
 	@Autowired
-	private final ProfileService profileService;
+	private final ProfileService userService;
 
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public UserTo getLoggedUser() {
-		log.info("GET request: get logged user");
-		return profileService.getLoggedUser();
+	public UserTo getLoggedUser(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
+		log.debug("GET request: get logged user");
+		return authorizedUser.getUserTo();
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public UserTo updateLoggedUser(@Valid @RequestBody final UserTo user) {
+	public UserTo updateLoggedUser(@Valid @RequestBody final UserTo user,
+	                               @AuthenticationPrincipal AuthorizedUser authorizedUser) {
 		log.info("PUT request: update logged user");
 		return UserUtil.getTo(
-				profileService.updateLoggedUser(
-						UserUtil.getUserFromTo(user)));
-
+				userService.updateLoggedUser(
+						UserUtil.getUserFromTo(user), authorizedUser.getUserTo()));
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -46,7 +48,7 @@ public class UserRestController {
 	public UserTo userRegistration(@Valid @RequestBody final UserTo user) {
 		log.info("POST request: new user registration");
 		return UserUtil.getTo(
-				profileService.userRegistration(
+				userService.userRegistration(
 						UserUtil.getUserFromTo(user)));
 	}
 }

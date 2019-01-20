@@ -75,7 +75,7 @@ public class VoteRestControllerTest extends AbstractRestControllerTest {
 		final int restaurantId = 1;
 		setDeadlineTime(voteService, LocalTime.now().minusHours(1).toString());
 		mockMvc.perform(post(REST_URL + "restaurants/" + restaurantId + "/vote"))
-				.andExpect(status().isForbidden());
+				.andExpect(status().isConflict());
 	}
 
 	@SneakyThrows
